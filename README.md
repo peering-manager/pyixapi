@@ -12,7 +12,7 @@ Alternatively, you can clone the repo and run `python setup.py install`.
 
 To begin, import pyixapi and instantiate the API.
 
-```
+```python
 import pyixapi
 ixapi = pyixapi.api(
     "https://api.de-cix.net/api/v1/",
@@ -36,7 +36,7 @@ The pyixapi API is setup so that IX-API's endpoints are attributes of the
 actions on the endpoint. For example, in order to query all the objects in the
 `network-service-configs` endpoint you would do the following:
 
-```
+```python
 >>> nsc = ixapi.network_service_configs.all()
 >>> for i in nsc:
 ...     print(i)
