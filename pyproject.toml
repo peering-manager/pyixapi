@@ -1,0 +1,8 @@
+# See PEP 518 for the spec of this file
+# https://www.python.org/dev/peps/pep-0518/
+
+[tool.black]
+target_version = ["py38", "py39", "py310"]
+
+[tool.isort]
+profile = "black"
