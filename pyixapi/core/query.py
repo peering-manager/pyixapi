@@ -90,27 +90,17 @@ class Request(object):
 
     def get_version(self):
         """
-        Gets the API version of IX-API.
+        Get the API version of IX-API.
 
-        Issues a GET request to the base URL to read the API version from the
-        response headers.
+        Issue a GET request to the health endpoint to read the API version.
+
+        If a RequestError is raised, it is catched and the version is considered as
+        equal to 1 (IX-API v1 does not have a health endpoint).
         """
-        # headers = {"Content-Type": "application/json;"}
-        # if self.token:
-        #     headers["Authorization"] = f"Bearer {self.token}"
-        # r = self.http_session.get(self.base, headers=headers)
-        # if r.ok:
-        #     return r.headers.get("API-Version", "")
-        # else:
-        #     raise RequestError(r)
-
-        # FIXME: this is a dirty workaround, it'll be nice to have an API version
-        # number in responses' headers (see commented code above)
-        r = re.match(r".*/v(\d).*", self.base)
-        if r:
-            return int(r.group(1))
-        else:
-            return 0
+        try:
+            return self.get_health()["version"]
+        except RequestError:
+            return "1"
 
     def get_health(self):
         """
