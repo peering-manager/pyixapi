@@ -45,8 +45,8 @@ class API(object):
         self.url = url.rstrip("/")
         self.key = key
         self.secret = secret
-        self.access_token = Token.from_jwt(access_token) if access_token else ""
-        self.refresh_token = Token.from_jwt(refresh_token) if refresh_token else ""
+        self.access_token = Token.from_jwt(access_token) if access_token else None
+        self.refresh_token = Token.from_jwt(refresh_token) if refresh_token else None
         self.http_session = requests.Session()
         self.user_agent = user_agent
 
@@ -92,7 +92,7 @@ class API(object):
 
         return Record(r, self, self.auth)
 
-    def authentication_refresh(self):
+    def refresh_authentication(self):
         """
         Prolong authentication by refreshing the tokens pair.
         """
