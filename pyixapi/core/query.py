@@ -8,7 +8,7 @@ class RequestError(Exception):
     """
     More detailed exception that returns the original requests object for inspection.
     Along with some attributes with specific details from the requests object. If
-    return is json we decode and add it to the message.
+    return is JSON we decode and add it to the message.
     """
 
     def __init__(self, r):
@@ -22,8 +22,6 @@ class RequestError(Exception):
 
         super(RequestError, self).__init__(r)
         self.req = r
-        self.request_body = r.request.body
-        self.base = r.url
         self.error = r.text
 
     def __str__(self):
@@ -41,10 +39,8 @@ class ContentError(Exception):
         super(ContentError, self).__init__(req)
 
         self.req = req
-        self.request_body = req.request.body
-        self.base = req.url
         self.error = (
-            "The server returned invalid (non-json) data. Maybe not an IX-API server?"
+            "The server returned invalid (non-JSON) data. Maybe not an IX-API server?"
         )
 
     def __str__(self):

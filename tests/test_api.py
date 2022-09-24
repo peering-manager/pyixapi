@@ -43,6 +43,9 @@ class ApiTestCase(unittest.TestCase):
 class ApiVersionTestCase(unittest.TestCase):
     class ResponseWithFailure:
         ok = False
+        status_code = 404
+        url = host
+        text = "Not found"
 
     class ResponseWithSuccess:
         ok = True
@@ -62,7 +65,7 @@ class ApiVersionTestCase(unittest.TestCase):
         "requests.sessions.Session.get",
         return_value=ResponseWithSuccess(),
     )
-    def test_api_version_1(self, *_):
+    def test_api_version(self, *_):
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.version, "2")
 
