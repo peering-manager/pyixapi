@@ -1,2 +1,2 @@
 black~=22.8
-pytest==6.2.*
+pytest==7.1.*
