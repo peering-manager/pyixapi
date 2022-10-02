@@ -2,6 +2,10 @@
 
 Python API client library for [IX-API](https://ix-api.net/).
 
+Supported versions are:
+
+* [version 1](https://docs.ix-api.net/v1/)
+
 ## Installation
 
 To install run `pip install pyixapi`.
@@ -51,3 +55,5 @@ DXDB:PAS:00007
 DXDB:PAS:00008
 >>>
 ```
+
+Write queries are not implemented yet.
