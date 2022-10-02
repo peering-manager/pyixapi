@@ -1,8 +1,15 @@
+from pathlib import Path
+
 from setuptools import find_packages, setup
+
+d = Path(__file__).parent
+long_description = (d / "README.md").read_text()
 
 setup(
     name="pyixapi",
     description="IX-API client library",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/peering-manager/pyixapi",
     author="Guillaume Mazoyer",
     author_email="oss@mazoyer.eu",
