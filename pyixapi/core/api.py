@@ -82,7 +82,21 @@ class API(object):
     def authenticate(self):
         """
         Authenticate and generate a pair of tokens.
+
+        If an authentication has been done before and the access token is still valid,
+        a new request won't be issued.
+
+        If a the access token is expired but the refresh token is still valid, the
+        tokens pair will be refreshed by calling
+        :py:meth:`.API.refresh_authentication()`.
         """
+        # Access token still valid, no need for re-auth
+        if self.access_token and not self.access_token.is_expired:
+            return None
+        # Refresh token still valid, prolong auth with it
+        if self.refresh_token and not self.refresh_token.is_expired:
+            return self.refresh_authentication()
+
         r = Request(
             cat(self.url, "auth", "token"), http_session=self.http_session
         ).post(data={"api_key": self.key, "api_secret": self.secret})

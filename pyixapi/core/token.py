@@ -43,6 +43,13 @@ class Token(object):
         seconds = (self.expires_at - datetime.now()).total_seconds()
         return max(0, seconds)
 
+    @property
+    def is_expired(self):
+        """
+        Tell if a token is expired or not (TTL equals to 0).
+        """
+        return self.ttl == 0
+
     @classmethod
     def from_jwt(cls, token):
         """
