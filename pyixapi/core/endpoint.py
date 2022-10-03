@@ -15,6 +15,7 @@ class Endpoint(object):
         self.return_obj = model if model else Record
         self.api = api
         self.url = cat(api.url, name)
+        self.name = name
 
     def __str__(self):
         return self.url

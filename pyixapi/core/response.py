@@ -173,7 +173,10 @@ class Record(object):
         return dict(self)[k]
 
     def __str__(self):
-        return self.id
+        if hasattr(self, "id"):
+            return self.id
+        else:
+            return str(self.endpoint)
 
     def __repr__(self):
         return str(dict(self))
