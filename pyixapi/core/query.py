@@ -1,5 +1,4 @@
 import json
-import re
 
 from pyixapi.core.util import cat
 
@@ -14,6 +13,10 @@ class RequestError(Exception):
     def __init__(self, r):
         if r.status_code == 404:
             self.message = f"The requested url: {r.url} could not be found."
+        elif r.status_code == 401:
+            self.message = (
+                "Authentication credentials are invalid, tokens renewal required."
+            )
         else:
             try:
                 self.message = f"The request failed with code {r.status_code} {r.reason}: {r.json()}"
