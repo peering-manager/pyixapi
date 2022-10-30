@@ -14,12 +14,20 @@ from pyixapi.models import (
     Demarc,
     Device,
     Facility,
+    MemberJoiningRule,
+    MetroArea,
+    MetroAreaNetwork,
     NetworkFeature,
     NetworkFeatureConfig,
     NetworkService,
     NetworkServiceConfig,
     PoP,
+    Port,
+    PortReservation,
     Product,
+    ProductOffering,
+    Role,
+    RoleAssignment,
 )
 
 __version__ = "0.1.2"
@@ -69,6 +77,23 @@ class API(object):
         self.network_services = Endpoint(self, "network-services", model=NetworkService)
         self.pops = Endpoint(self, "pops", model=PoP)
         self.products = Endpoint(self, "products", model=Product)
+        # Version 2+
+        self.member_joining_rules = Endpoint(
+            self, "member-joining-rules", model=MemberJoiningRule
+        )
+        self.metro_areas = Endpoint(self, "metro-areas", model=MetroArea)
+        self.metro_area_networks = Endpoint(
+            self, "metro-area-networks", model=MetroAreaNetwork
+        )
+        self.ports = Endpoint(self, "ports", model=Port)
+        self.port_reservations = Endpoint(
+            self, "port-reservations", model=PortReservation
+        )
+        self.product_offerings = Endpoint(
+            self, "product-offerings", model=ProductOffering
+        )
+        self.roles = Endpoint(self, "roles", model=Role)
+        self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
 
     @property
     def version(self):

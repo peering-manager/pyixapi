@@ -5,6 +5,7 @@ Python API client library for [IX-API](https://ix-api.net/).
 Supported versions are:
 
 * [version 1](https://docs.ix-api.net/v1/)
+* [version 2](https://docs.ix-api.net/v2/)
 
 ## Installation
 

@@ -2,6 +2,8 @@ import ipaddress
 
 from pyixapi.core.response import Record
 
+# Version 1 and up
+
 
 class Account(Record):
     """
@@ -160,3 +162,92 @@ class Product(Record):
 
     def __str__(self):
         return self.name
+
+
+# Version 2 and up
+
+
+class MemberJoiningRule(Record):
+    """
+    A MemberJoiningRule defines a rule to allow or deny access for an Account to a
+    access a NetworkService.
+
+    Furthermore, some NetworkServices may only be visible if the querying account is
+    listed in an allow rule.
+    """
+
+    def __str__(self):
+        return self.id
+
+
+class MetroArea(Record):
+    """
+    A MetroArea exists if a MetroAreaNetwork or Facility is present in it.
+    """
+
+    def __str__(self):
+        return self.display_name
+
+
+class MetroAreaNetwork(Record):
+    """
+    Services are provided directly on or can be consumed from inside a
+    MetroAreaNetwork.
+
+    Accounts can indicate their presence in a MetroAreaNetwork to others by adding a
+    list of IDs.
+    """
+
+    def __str__(self):
+        return self.name
+
+
+class Port(Record):
+    """
+    A Port is the point at which subscriber and IXP networks meet. A port is always
+    associated with a device and pop, has a speed and a media_type.
+    """
+
+    def __str__(self):
+        return self.name
+
+
+class PortReservation(Record):
+    """
+    A PortReservation expresses the intent to include a Port in a connection.
+
+    Decommissining a port-reservation will lead to the removal of the port from the
+    LAG.
+
+    Please note that individual cancellation policies might apply.
+    """
+
+    def __str__(self):
+        return self.id
+
+
+class ProductOffering(Record):
+    """
+    A ProductOffering is an offer made by an exchange to be consumed by a client.
+    """
+
+    def __str__(self):
+        return self.name
+
+
+class Role(Record):
+    """
+    A Role enables a Contact to act for a specific purpose.
+    """
+
+    def __str__(self):
+        return self.name
+
+
+class RoleAssignment(Record):
+    """
+    A Contact can be assigned to many Roles.
+    """
+
+    def __str__(self):
+        return self.id
