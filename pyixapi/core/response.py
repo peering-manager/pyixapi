@@ -105,12 +105,6 @@ class Record(object):
     'exchange_lan'
     >>>
 
-    Querying a field on a nested object:
-    >>> x = nb.dcim.devices.get(1)
-    >>> x.device_type.model
-    'QFX5100-24Q'
-    >>>
-
     Casting the object as a dictionary:
     >>> from pprint import pprint
     >>> pprint(dict(x))

@@ -97,9 +97,9 @@ class Request(object):
         equal to 1 (IX-API v1 does not have a health endpoint).
         """
         try:
-            return self.get_health()["version"]
+            return int(self.get_health()["version"])
         except RequestError:
-            return "1"
+            return 1
 
     def get_health(self):
         """

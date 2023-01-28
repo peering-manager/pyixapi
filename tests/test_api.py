@@ -51,7 +51,7 @@ class ApiVersionTestCase(unittest.TestCase):
         ok = True
 
         def json(self):
-            return {"status": "pass", "version": "2"}
+            return {"status": "pass", "version": 2}
 
     @patch(
         "requests.sessions.Session.get",
@@ -59,7 +59,7 @@ class ApiVersionTestCase(unittest.TestCase):
     )
     def test_api_version_1(self, *_):
         api = pyixapi.api(host, *def_args)
-        self.assertEqual(api.version, "1")
+        self.assertEqual(api.version, 1)
 
     @patch(
         "requests.sessions.Session.get",
@@ -67,7 +67,7 @@ class ApiVersionTestCase(unittest.TestCase):
     )
     def test_api_version(self, *_):
         api = pyixapi.api(host, *def_args)
-        self.assertEqual(api.version, "2")
+        self.assertEqual(api.version, 2)
 
 
 class ApiHealthTestCase(unittest.TestCase):
