@@ -221,8 +221,6 @@ class Record(object):
                 lookup = getattr(self.__class__, k, None)
                 if lookup:
                     v = lookup(v, self.api, self.endpoint)
-                else:
-                    v = self.default_ret(v, self.api, self.endpoint)
                 self._add_cache((k, v))
             elif isinstance(v, list):
                 v = [list_parser(k, i) for i in v]
