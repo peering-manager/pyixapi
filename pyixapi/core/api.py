@@ -61,7 +61,6 @@ class API(object):
         self.auth = Endpoint(self, "auth")
         self.connections = Endpoint(self, "connections", model=Connection)
         self.contacts = Endpoint(self, "contacts", model=Contact)
-        self.customers = Endpoint(self, "customers", model=Account)
         self.demarcs = Endpoint(self, "demarcs", model=Demarc)
         self.devices = Endpoint(self, "devices", model=Device)
         self.facilities = Endpoint(self, "facilities", model=Facility)
@@ -103,6 +102,12 @@ class API(object):
         return Request(
             base=self.url, token=self.access_token, http_session=self.http_session
         ).get_version()
+
+    @property
+    def accounts(self):
+        return Endpoint(
+            self, "customers" if self.version == 1 else "accounts", model=Account
+        )
 
     def authenticate(self):
         """
