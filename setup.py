@@ -18,7 +18,7 @@ setup(
     use_scm_version=True,
     setup_requires=["setuptools_scm"],
     packages=find_packages(exclude=["tests", "tests.*"]),
-    install_requires=["requests>=2.20.0,<3.0", "PyJWT>=2.4.0,<2.7"],
+    install_requires=["requests>=2.20.0,<3.0", "PyJWT>=2.4.0,<2.8"],
     zip_safe=False,
     keywords=["ix-api", "internet-exchange", "peering"],
     classifiers=[
