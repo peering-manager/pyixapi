@@ -80,3 +80,18 @@ class Endpoint(object):
                 return None
             else:
                 raise e
+
+    def create(self, *args, **kwargs):
+        """
+        Creates an object on an endpoint.
+
+        Allows for the creation of new objects on an endpoint. Named arguments are
+        converted to JSON properties, and a single object is created.
+        """
+        req = Request(
+            base=self.url,
+            token=self.token,
+            http_session=self.api.http_session,
+        ).post(args[0] if args else kwargs)
+
+        return self.return_obj(req, self.api, self)
