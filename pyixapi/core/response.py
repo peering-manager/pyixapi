@@ -296,7 +296,7 @@ class Record(object):
             r = Request(
                 key=self.id,
                 base=self.endpoint.url,
-                token=self.api.token,
+                token=self.api.access_token,
                 http_session=self.api.http_session,
             )
             if r.patch(updates):
@@ -322,7 +322,7 @@ class Record(object):
         r = Request(
             key=self.id,
             base=self.endpoint.url,
-            token=self.api.token,
+            token=self.api.access_token,
             http_session=self.api.http_session,
         )
         return True if r.delete() else False
