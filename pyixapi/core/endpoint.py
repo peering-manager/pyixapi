@@ -90,7 +90,7 @@ class Endpoint(object):
         """
         req = Request(
             base=self.url,
-            token=self.token,
+            token=self.api.access_token,
             http_session=self.api.http_session,
         ).post(args[0] if args else kwargs)
 
