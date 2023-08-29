@@ -24,7 +24,6 @@ from pyixapi.models import (
     PoP,
     Port,
     PortReservation,
-    Product,
     ProductOffering,
     Role,
     RoleAssignment,
@@ -75,7 +74,6 @@ class API(object):
         )
         self.network_services = Endpoint(self, "network-services", model=NetworkService)
         self.pops = Endpoint(self, "pops", model=PoP)
-        self.products = Endpoint(self, "products", model=Product)
         # Version 2+
         self.member_joining_rules = Endpoint(
             self, "member-joining-rules", model=MemberJoiningRule
@@ -87,9 +85,6 @@ class API(object):
         self.ports = Endpoint(self, "ports", model=Port)
         self.port_reservations = Endpoint(
             self, "port-reservations", model=PortReservation
-        )
-        self.product_offerings = Endpoint(
-            self, "product-offerings", model=ProductOffering
         )
         self.roles = Endpoint(self, "roles", model=Role)
         self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
@@ -107,6 +102,14 @@ class API(object):
     def accounts(self):
         return Endpoint(
             self, "customers" if self.version == 1 else "accounts", model=Account
+        )
+
+    @property
+    def product_offerings(self):
+        return Endpoint(
+            self,
+            "products" if self.version == 1 else "product-offerings",
+            model=ProductOffering,
         )
 
     def authenticate(self):

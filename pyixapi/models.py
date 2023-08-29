@@ -154,10 +154,11 @@ class PoP(Record):
         return self.name
 
 
-class Product(Record):
+class ProductOffering(Record):
     """
-    A Product is a network or peering-related product of a defined type sold by an IXP
-    to its customers.
+    A ProductOffering is an offer made by an exchange to be consumed by a client.
+
+    It is also referenced as "product" in IX-API v1.
     """
 
     def __str__(self):
@@ -224,15 +225,6 @@ class PortReservation(Record):
 
     def __str__(self):
         return self.id
-
-
-class ProductOffering(Record):
-    """
-    A ProductOffering is an offer made by an exchange to be consumed by a client.
-    """
-
-    def __str__(self):
-        return self.name
 
 
 class Role(Record):
