@@ -1,8 +1,88 @@
-# See PEP 518 for the spec of this file
-# https://www.python.org/dev/peps/pep-0518/
+[tool.poetry]
+name = "pyixapi"
+version = "0.2.1"
+description = "Python API client library for IX-API"
+authors = ["Guillaume Mazoyer <oss@mazoyer.eu>"]
+readme = "README.md"
+license = "Apache-2.0"
+packages = [{ include = "pyixapi" }]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 
-[tool.black]
-target_version = ["py38", "py39", "py310", "py311"]
+[tool.poetry.dependencies]
+python = "^3.8"
+PyJWT = ">=2.4.0,<2.9"
+requests = ">=2.20.0,<3.0"
 
-[tool.isort]
-profile = "black"
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+ruff = "~0.2"
+
+[tool.ruff]
+line-length = 88
+
+exclude = [
+    ".git",
+    ".tox",
+    ".venv",
+    "env",
+    "_build",
+    "build",
+    "dist",
+    "examples",
+]
+
+[tool.ruff.lint]
+preview = true
+
+select = [
+    # mccabe complexity
+    "C90",
+    # pycodestyle errors
+    "E",
+    # pycodestyle warnings
+    "W",
+    # pyflakes
+    "F",
+    # isort-like checks
+    "I",
+    # flake8-datetimez
+    "DTZ",
+    # flake8-import-conventions
+    "ICN",
+    # flake8-type-checking
+    "TCH",
+    # flake8-debugger
+    "T10",
+    # flake8-quotes
+    "Q",
+    # flake8-2020
+    "YTT",
+]
+
+task-tags = ["FIXME", "TODO", "XXX"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = ["pyixapi"]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 88
+
+[tool.ruff.lint.mccabe]
+max-complexity = 31
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -19,9 +19,15 @@ class RequestError(Exception):
             )
         else:
             try:
-                self.message = f"The request failed with code {r.status_code} {r.reason}: {r.json()}"
+                self.message = (
+                    f"The request failed with code {r.status_code} "
+                    f"{r.reason}: {r.json()}"
+                )
             except ValueError:
-                self.message = f"The request failed with code {r.status_code} {r.reason} but details were not found as JSON."
+                self.message = (
+                    f"The request failed with code {r.status_code} "
+                    f"{r.reason} but details were not found as JSON."
+                )
 
         super(RequestError, self).__init__(r)
         self.req = r
