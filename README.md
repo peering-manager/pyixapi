@@ -11,8 +11,6 @@ Supported versions are:
 
 To install run `pip install pyixapi`.
 
-Alternatively, you can clone the repo and run `python setup.py install`.
-
 ## Quick Start
 
 To begin, import pyixapi and instantiate the API.
