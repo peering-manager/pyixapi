@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import jwt
 
@@ -40,7 +40,7 @@ class Token(object):
         """
         TTL is the number of seconds, from now, before the token expires.
         """
-        seconds = (self.expires_at - datetime.now()).total_seconds()
+        seconds = (self.expires_at - datetime.now(timezone.utc)).total_seconds()
         return max(0, seconds)
 
     @property
@@ -65,8 +65,8 @@ class Token(object):
             raise TokenException(e)
 
         try:
-            issued_at = datetime.fromtimestamp(payload["iat"])
-            expires_at = datetime.fromtimestamp(payload["exp"])
+            issued_at = datetime.fromtimestamp(payload["iat"], tz=timezone.utc)
+            expires_at = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
             return cls(token, issued_at, expires_at)
         except Exception as e:
             raise InvalidTokenException(e)

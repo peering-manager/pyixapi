@@ -62,7 +62,9 @@ class Endpoint(object):
             try:
                 next(response)
                 raise ValueError(
-                    "get() returned more than one result. Check that the kwarg(s) passed are valid for this endpoint or use filter() or all() instead."
+                    "get() returned more than one result. Check that the kwarg(s) "
+                    "passed are valid for this endpoint or use filter() or all() "
+                    "instead."
                 )
             except StopIteration:
                 return value

@@ -1,4 +1,5 @@
-name: Run Tests
+---
+name: Check format, lint and tests
 
 on:
   pull_request: {}
@@ -11,16 +12,33 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.8", "3.9", "3.10", "3.11"]
+        python:
+        - "3.8"
+        - "3.9"
+        - "3.10"
+        - "3.11"
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python }}
-    - name: Install dev requirements
-      run: pip install -r requirements-dev.txt .
-    - name: Run Linter
-      run: black --diff --check pyixapi tests
+
+    - name: Install Poetry
+      run: pipx install poetry
+
+    - name: Validate pyproject.toml and poetry.lock
+      run: poetry check
+
+    - name: Install dependencies
+      run: poetry install --with dev
+
+    - name: Run format and lint
+      run: |
+        poetry run ruff format --check --diff .
+        poetry run ruff check --diff .
+
     - name: Run Tests
-      run: pytest
+      run: poetry run pytest
