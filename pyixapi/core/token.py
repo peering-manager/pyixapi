@@ -1,3 +1,4 @@
+import warnings
 from datetime import datetime, timezone
 
 import jwt
@@ -11,7 +12,7 @@ class InvalidTokenException(Exception):
     pass
 
 
-class Token(object):
+class Token:
     """
     A token is at the core of the authentication mechanism of IX-API.
 
@@ -24,19 +25,26 @@ class Token(object):
     continue using the API.
     """
 
-    def __init__(self, token, issued_at, expires_at):
-        self.encoded = token  # Cache signed token data
-        self.issued_at = issued_at
-        self.expires_at = expires_at
+    def __init__(self, token: str, expires_at: datetime) -> None:
+        self.encoded: str = token  # Cache signed token data
+        self.expires_at: datetime = expires_at
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.encoded
 
-    def __repr__(self):
-        return f"<Token issued_at={self.issued_at} ttl={self.ttl}s>"
+    def __repr__(self) -> str:
+        return f"<Token ttl={self.ttl}s>"
 
     @property
-    def ttl(self):
+    def issued_at(self) -> datetime:
+        warnings.warn(
+            "Property 'issued_at' is deprecated and value will always be set to now.",
+            DeprecationWarning,
+        )
+        return datetime.now(tz=timezone.utc)
+
+    @property
+    def ttl(self) -> int:
         """
         TTL is the number of seconds, from now, before the token expires.
         """
@@ -44,17 +52,16 @@ class Token(object):
         return max(0, seconds)
 
     @property
-    def is_expired(self):
+    def is_expired(self) -> bool:
         """
         Tell if a token is expired or not (TTL equals to 0).
         """
         return self.ttl == 0
 
     @classmethod
-    def from_jwt(cls, token):
+    def from_jwt(cls, token: str) -> "Token":
         """
-        Create a new token from a JWT, decoding it and caching it issued and
-        expiration times.
+        Create a new token from a JWT, decoding it and caching its expiration time.
 
         :param token: (str) String containing the original encoded token which is the
             result of a POST request to the authentication endpoint.
@@ -65,8 +72,9 @@ class Token(object):
             raise TokenException(e)
 
         try:
-            issued_at = datetime.fromtimestamp(payload["iat"], tz=timezone.utc)
-            expires_at = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
-            return cls(token, issued_at, expires_at)
+            return cls(
+                token=token,
+                expires_at=datetime.fromtimestamp(payload["exp"], tz=timezone.utc),
+            )
         except Exception as e:
             raise InvalidTokenException(e)
