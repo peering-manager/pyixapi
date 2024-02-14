@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyixapi"
-version = "0.2.1"
+version = "0.2.2"
 description = "Python API client library for IX-API"
 authors = ["Guillaume Mazoyer <oss@mazoyer.eu>"]
 readme = "README.md"
@@ -36,34 +36,24 @@ exclude = [
     "build",
     "dist",
     "examples",
+    "__main__.py",
 ]
 
 [tool.ruff.lint]
 preview = true
 
 select = [
-    # mccabe complexity
-    "C90",
-    # pycodestyle errors
-    "E",
-    # pycodestyle warnings
-    "W",
-    # pyflakes
-    "F",
-    # isort-like checks
-    "I",
-    # flake8-datetimez
-    "DTZ",
-    # flake8-import-conventions
-    "ICN",
-    # flake8-type-checking
-    "TCH",
-    # flake8-debugger
-    "T10",
-    # flake8-quotes
-    "Q",
-    # flake8-2020
-    "YTT",
+    "C90", # mccabe complexity
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort-like checks
+    "DTZ", # flake8-datetimez
+    "ICN", # flake8-import-conventions
+    "TCH", # flake8-type-checking
+    "T10", # flake8-debugger
+    "Q",   # flake8-quotes
+    "YTT", # flake8-2020
 ]
 
 task-tags = ["FIXME", "TODO", "XXX"]
