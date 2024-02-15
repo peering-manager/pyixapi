@@ -1,9 +1,12 @@
+from typing import Any
+
+
 class Hashabledict(dict):
     def __hash__(self):
         return hash(frozenset(self))
 
 
-def cat(*args, separator="/", trailing=""):
+def cat(*args: Any, separator: str = "/", trailing: str = "") -> str:
     """
     Concatenate strings given a separator. All items will be parsed as string.
 

@@ -18,7 +18,7 @@ class ApiTestCase(unittest.TestCase):
         "requests.sessions.Session.post",
         return_value=Response(fixture="api/authenticate.json"),
     )
-    def test_authenticate(self, *_):
+    def test_authenticate(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         r = api.authenticate()
 
@@ -30,7 +30,7 @@ class ApiTestCase(unittest.TestCase):
         "requests.sessions.Session.post",
         return_value=Response(fixture="api/refresh_authentication.json"),
     )
-    def test_refresh_authentication(self, *_):
+    def test_refresh_authentication(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         api.authenticate()
         r = api.refresh_authentication()
@@ -57,7 +57,7 @@ class ApiVersionTestCase(unittest.TestCase):
         "requests.sessions.Session.get",
         return_value=ResponseWithFailure(),
     )
-    def test_api_version_1(self, *_):
+    def test_api_version_1(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.version, 1)
 
@@ -65,7 +65,7 @@ class ApiVersionTestCase(unittest.TestCase):
         "requests.sessions.Session.get",
         return_value=ResponseWithSuccess(),
     )
-    def test_api_version(self, *_):
+    def test_api_version(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.version, 2)
 
@@ -81,6 +81,6 @@ class ApiHealthTestCase(unittest.TestCase):
         "requests.sessions.Session.get",
         return_value=ResponseWithHealth(),
     )
-    def test_api_status(self, *_):
+    def test_api_status(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.health()["status"], "pass")
