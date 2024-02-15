@@ -7,8 +7,8 @@ class Response(object):
     def __init__(
         self,
         fixture: Optional[str],
-        status_code: Optional[int] = 200,
-        ok: Optional[bool] = True,
+        status_code: int = 200,
+        ok: bool = True,
         content: Optional[Any] = None,
     ) -> None:
         self.status_code = status_code
