@@ -100,3 +100,6 @@ ENV/
 
 # Visual Studio Code settings
 .vscode/
+
+# Local testing
+pyixapi/__main__.py
