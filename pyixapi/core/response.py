@@ -1,8 +1,14 @@
+from typing import TYPE_CHECKING, Any, Generator
+
 from pyixapi.core.query import Request
 from pyixapi.core.util import Hashabledict
 
+if TYPE_CHECKING:
+    from pyixapi.core.api import API
+    from pyixapi.core.endpoint import Endpoint
 
-def get_return(lookup):
+
+def get_return(lookup: Any) -> int:
     """
     Return simple representations for items passed to lookup.
 
@@ -10,12 +16,11 @@ def get_return(lookup):
     lookup. We check if it's a :py:class:`.Record`, if so simply return its ID.
     """
     if isinstance(lookup, Record):
-        return getattr(lookup, "id")
-    else:
-        return lookup
+        return lookup.id
+    return lookup
 
 
-class RecordSet(object):
+class RecordSet:
     """
     Iterator containing :py:class:`.Record` objects.
 
@@ -52,16 +57,16 @@ class RecordSet(object):
     >>>
     """
 
-    def __init__(self, endpoint, request, **kwargs):
+    def __init__(self, endpoint: "Endpoint", request: "Request") -> None:
         self.endpoint = endpoint
         self.request = request
         self.response = self.request.get()
         self._response_cache = []
 
-    def __iter__(self):
+    def __iter__(self) -> "RecordSet":
         return self
 
-    def __next__(self):
+    def __next__(self) -> "Record":
         if self._response_cache:
             return self.endpoint.return_obj(
                 self._response_cache.pop(), self.endpoint.api, self.endpoint
@@ -70,7 +75,7 @@ class RecordSet(object):
             next(self.response), self.endpoint.api, self.endpoint
         )
 
-    def __len__(self):
+    def __len__(self) -> int:
         try:
             return self.request.count
         except AttributeError:
@@ -81,7 +86,7 @@ class RecordSet(object):
             return self.request.count
 
 
-class Record(object):
+class Record:
     """
     Create Python objects from IX-API responses.
 
@@ -144,7 +149,9 @@ class Record(object):
 
     url = None
 
-    def __init__(self, values, api, endpoint):
+    def __init__(
+        self, values: dict[str, Any], api: "API", endpoint: "Endpoint"
+    ) -> None:
         self._full_cache = []
         self._init_cache = []
         self.api = api
@@ -153,7 +160,7 @@ class Record(object):
         if values:
             self._parse_values(values)
 
-    def __iter__(self):
+    def __iter__(self) -> Generator[Any, Any, None]:
         for i in dict(self._init_cache):
             a = getattr(self, i)
             if isinstance(a, Record):
@@ -166,31 +173,27 @@ class Record(object):
     def __getitem__(self, k):
         return dict(self)[k]
 
-    def __str__(self):
-        if hasattr(self, "id"):
-            return self.id
-        else:
-            return str(self.endpoint)
+    def __str__(self) -> str:
+        return getattr(self, "id", str(self.endpoint))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(dict(self))
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         return self.__dict__
 
-    def __setstate__(self, d):
+    def __setstate__(self, d) -> None:
         self.__dict__.update(d)
 
     def __key__(self):
         if hasattr(self, "id"):
             return (self.endpoint.name, self.id)
-        else:
-            return self.endpoint.name
+        return self.endpoint.name
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__key__())
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if isinstance(other, Record):
             return self.__key__() == other.__key__()
         return NotImplemented
@@ -211,24 +214,26 @@ class Record(object):
                     # This is *list_parser*, so if the custom model field is not
                     # a list (or is not defined), just return the default model
                     return self.default_ret(list_item, self.api, self.endpoint)
-                else:
-                    model = lookup[0]
-                    return model(list_item, self.api, self.endpoint)
+
+                model = lookup[0]
+                return model(list_item, self.api, self.endpoint)
             return list_item
 
         for k, v in values.items():
+            parsed_value = None
+
             if isinstance(v, dict):
                 lookup = getattr(self.__class__, k, None)
                 if lookup:
-                    v = lookup(v, self.api, self.endpoint)
-                self._add_cache((k, v))
+                    parsed_value = lookup(v, self.api, self.endpoint)
+                self._add_cache((k, parsed_value))
             elif isinstance(v, list):
-                v = [list_parser(k, i) for i in v]
-                to_cache = list(v)
+                parsed_value = [list_parser(k, i) for i in v]
+                to_cache = list(parsed_value)
                 self._add_cache((k, to_cache))
             else:
                 self._add_cache((k, v))
-            setattr(self, k, v)
+            setattr(self, k, parsed_value or v)
 
     def serialize(self, nested=False, init=False):
         """
@@ -248,7 +253,7 @@ class Record(object):
         for i in dict(self):
             current_val = getattr(self, i) if not init else init_vals.get(i)
             if isinstance(current_val, Record):
-                current_val = getattr(current_val, "serialize")(nested=True)
+                current_val = current_val.serialize(nested=True)
             if isinstance(current_val, list):
                 current_val = [
                     v.id if isinstance(v, Record) else v for v in current_val
@@ -268,7 +273,7 @@ class Record(object):
         init = Hashabledict(
             {fmt_dict(k, v) for k, v in self.serialize(init=True).items()}
         )
-        return set([i[0] for i in set(current.items()) ^ set(init.items())])
+        return {i[0] for i in set(current.items()) ^ set(init.items())}
 
     def updates(self):
         """

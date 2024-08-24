@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# noqa: INP001
 #
 # pyixapi documentation build configuration file, created by
 # sphinx-quickstart on Sun Sep 18 18:31:27 2022.
@@ -16,12 +16,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
 import sys
+from pathlib import Path
 
-from pkg_resources import get_distribution
+from pyixapi import __version__ as pyixapi_version
 
-sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, str(Path().parent.resolve()))
 
 
 # -- General configuration ------------------------------------------------
@@ -49,14 +49,14 @@ master_doc = "index"
 
 # General information about the project.
 project = "pyixapi"
-copyright = "2012, Guillaume Mazoyer"
+copyright = "2022, Guillaume Mazoyer"
 author = "Guillaume Mazoyer"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 # The full version, including alpha/beta/rc tags.
-release = get_distribution("pyixapi").version
+release = pyixapi_version
 #
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])

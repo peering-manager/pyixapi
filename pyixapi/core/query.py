@@ -1,4 +1,6 @@
 import json
+from http import HTTPStatus
+from typing import Any
 
 from pyixapi.core.util import cat
 
@@ -10,10 +12,10 @@ class RequestError(Exception):
     return is JSON we decode and add it to the message.
     """
 
-    def __init__(self, r):
-        if r.status_code == 404:
+    def __init__(self, r) -> None:
+        if r.status_code == HTTPStatus.NOT_FOUND:
             self.message = f"The requested url: {r.url} could not be found."
-        elif r.status_code == 401:
+        elif r.status_code == HTTPStatus.UNAUTHORIZED:
             self.message = (
                 "Authentication credentials are invalid, tokens renewal required."
             )
@@ -29,11 +31,11 @@ class RequestError(Exception):
                     f"{r.reason} but details were not found as JSON."
                 )
 
-        super(RequestError, self).__init__(r)
+        super().__init__(r)
         self.req = r
         self.error = r.text
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.message
 
 
@@ -44,19 +46,19 @@ class ContentError(Exception):
     those cases.
     """
 
-    def __init__(self, req):
-        super(ContentError, self).__init__(req)
+    def __init__(self, req) -> None:
+        super().__init__(req)
 
         self.req = req
         self.error = (
             "The server returned invalid (non-JSON) data. Maybe not an IX-API server?"
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.error
 
 
-class Request(object):
+class Request:
     """
     Create requests to the IX-API.
 
@@ -71,7 +73,7 @@ class Request(object):
 
     def __init__(
         self, base, http_session, filters=None, key=None, token=None, user_agent=None
-    ):
+    ) -> None:
         self.base = base
         self.filters = filters or None
         self.key = key
@@ -80,7 +82,7 @@ class Request(object):
         self.url = self.base if not key else cat(self.base, key)
         self.user_agent = user_agent
 
-    def get_openapi(self):
+    def get_openapi(self) -> Any:
         """
         Get the OpenAPI Spec.
         """
@@ -90,10 +92,10 @@ class Request(object):
         )
         if req.ok:
             return req.json()
-        else:
-            raise RequestError(req)
 
-    def get_version(self):
+        raise RequestError(req)
+
+    def get_version(self) -> int:
         """
         Get the API version of IX-API.
 
@@ -107,7 +109,7 @@ class Request(object):
         except RequestError:
             return 1
 
-    def get_health(self):
+    def get_health(self) -> dict[str, Any]:
         """
         Get the health from /api/health endpoint in IX-API.
         """
@@ -117,11 +119,17 @@ class Request(object):
         r = self.http_session.get(cat(self.base, "health"), headers=headers)
         if r.ok:
             return r.json()
-        else:
-            raise RequestError(r)
 
-    def _make_call(self, verb="get", url_override=None, add_params=None, data=None):
-        if verb in ("post", "put") or verb == "delete" and data:
+        raise RequestError(r)
+
+    def _make_call(
+        self,
+        verb: str = "get",
+        url_override: str | None = None,
+        add_params: dict[str, Any] | None = None,
+        data: Any | None = None,
+    ) -> Any:
+        if verb in {"post", "put"} or verb == "delete" and data:
             headers = {"Content-Type": "application/json;"}
         else:
             headers = {"accept": "application/json;"}
@@ -143,17 +151,17 @@ class Request(object):
         if verb == "delete":
             if r.ok:
                 return True
-            else:
-                raise RequestError(r)
-        elif r.ok:
+
+            raise RequestError(r)
+        if r.ok:
             try:
                 return r.json()
-            except json.JSONDecodeError:
-                raise ContentError(r)
+            except json.JSONDecodeError as e:
+                raise ContentError(r) from e
         else:
             raise RequestError(r)
 
-    def get(self, add_params=None):
+    def get(self, add_params: dict[str, Any] | None = None) -> Any:
         """
         Make a GET request to IX-API.
 
@@ -166,13 +174,12 @@ class Request(object):
         req = self._make_call(add_params=add_params)
         if isinstance(req, list):
             self.count = len(req)
-            for i in req:
-                yield i
+            yield from req
         else:
             self.count = len(req)
             yield req
 
-    def put(self, data):
+    def put(self, data: Any) -> Any:
         """
         Make a PUT request to IX-API.
 
@@ -184,7 +191,7 @@ class Request(object):
         """
         return self._make_call(verb="put", data=data)
 
-    def post(self, data):
+    def post(self, data: Any) -> Any:
         """
         Make a POST request to IX-API.
 
@@ -196,7 +203,7 @@ class Request(object):
         """
         return self._make_call(verb="post", data=data)
 
-    def delete(self, data=None):
+    def delete(self, data: Any | None = None) -> Any:
         """
         Make a DELETE request to IX-API.
 
@@ -210,7 +217,7 @@ class Request(object):
         """
         return self._make_call(verb="delete", data=data)
 
-    def patch(self, data):
+    def patch(self, data: Any) -> Any:
         """
         Make a PATCH request to IX-API.
 
@@ -222,7 +229,7 @@ class Request(object):
         """
         return self._make_call(verb="patch", data=data)
 
-    def options(self):
+    def options(self) -> Any:
         """
         Make an OPTIONS request to IX-API.
 
