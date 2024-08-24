@@ -13,6 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 
 [tool.poetry.dependencies]
@@ -22,22 +23,12 @@ requests = ">=2.20.0,<3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
-ruff = ">=0.5,<0.7"
+ruff = "~0.6"
 
 [tool.ruff]
 line-length = 88
 
-exclude = [
-    ".git",
-    ".tox",
-    ".venv",
-    "env",
-    "_build",
-    "build",
-    "dist",
-    "examples",
-    "__main__.py",
-]
+exclude = [".git", ".tox", ".venv", "env", "_build", "build", "dist", "examples", "__main__.py"]
 
 [tool.ruff.lint]
 preview = true
