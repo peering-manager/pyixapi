@@ -68,12 +68,8 @@ class RecordSet:
 
     def __next__(self) -> "Record":
         if self._response_cache:
-            return self.endpoint.return_obj(
-                self._response_cache.pop(), self.endpoint.api, self.endpoint
-            )
-        return self.endpoint.return_obj(
-            next(self.response), self.endpoint.api, self.endpoint
-        )
+            return self.endpoint.return_obj(self._response_cache.pop(), self.endpoint.api, self.endpoint)
+        return self.endpoint.return_obj(next(self.response), self.endpoint.api, self.endpoint)
 
     def __len__(self) -> int:
         try:
@@ -149,9 +145,7 @@ class Record:
 
     url = None
 
-    def __init__(
-        self, values: dict[str, Any], api: "API", endpoint: "Endpoint"
-    ) -> None:
+    def __init__(self, values: dict[str, Any], api: "API", endpoint: "Endpoint") -> None:
         self._full_cache = []
         self._init_cache = []
         self.api = api
@@ -255,9 +249,7 @@ class Record:
             if isinstance(current_val, Record):
                 current_val = current_val.serialize(nested=True)
             if isinstance(current_val, list):
-                current_val = [
-                    v.id if isinstance(v, Record) else v for v in current_val
-                ]
+                current_val = [v.id if isinstance(v, Record) else v for v in current_val]
             r[i] = current_val
         return r
 
@@ -270,9 +262,7 @@ class Record:
             return k, v
 
         current = Hashabledict({fmt_dict(k, v) for k, v in self.serialize().items()})
-        init = Hashabledict(
-            {fmt_dict(k, v) for k, v in self.serialize(init=True).items()}
-        )
+        init = Hashabledict({fmt_dict(k, v) for k, v in self.serialize(init=True).items()})
         return {i[0] for i in set(current.items()) ^ set(init.items())}
 
     def updates(self):
