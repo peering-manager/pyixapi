@@ -16,19 +16,13 @@ class RequestError(Exception):
         if r.status_code == HTTPStatus.NOT_FOUND:
             self.message = f"The requested url: {r.url} could not be found."
         elif r.status_code == HTTPStatus.UNAUTHORIZED:
-            self.message = (
-                "Authentication credentials are invalid, tokens renewal required."
-            )
+            self.message = "Authentication credentials are invalid, tokens renewal required."
         else:
             try:
-                self.message = (
-                    f"The request failed with code {r.status_code} "
-                    f"{r.reason}: {r.json()}"
-                )
+                self.message = f"The request failed with code {r.status_code} " f"{r.reason}: {r.json()}"
             except ValueError:
                 self.message = (
-                    f"The request failed with code {r.status_code} "
-                    f"{r.reason} but details were not found as JSON."
+                    f"The request failed with code {r.status_code} " f"{r.reason} but details were not found as JSON."
                 )
 
         super().__init__(r)
@@ -50,9 +44,7 @@ class ContentError(Exception):
         super().__init__(req)
 
         self.req = req
-        self.error = (
-            "The server returned invalid (non-JSON) data. Maybe not an IX-API server?"
-        )
+        self.error = "The server returned invalid (non-JSON) data. Maybe not an IX-API server?"
 
     def __str__(self) -> str:
         return self.error
@@ -71,9 +63,7 @@ class Request:
         dict.
     """
 
-    def __init__(
-        self, base, http_session, filters=None, key=None, token=None, user_agent=None
-    ) -> None:
+    def __init__(self, base, http_session, filters=None, key=None, token=None, user_agent=None) -> None:
         self.base = base
         self.filters = filters or None
         self.key = key
@@ -87,9 +77,7 @@ class Request:
         Get the OpenAPI Spec.
         """
         headers = {"Content-Type": "application/json;"}
-        req = self.http_session.get(
-            cat(self.base, "docs/?format=openapi"), headers=headers
-        )
+        req = self.http_session.get(cat(self.base, "docs/?format=openapi"), headers=headers)
         if req.ok:
             return req.json()
 
@@ -144,9 +132,7 @@ class Request:
             if add_params:
                 params.update(add_params)
 
-        r = getattr(self.http_session, verb)(
-            url_override or self.url, headers=headers, params=params, json=data
-        )
+        r = getattr(self.http_session, verb)(url_override or self.url, headers=headers, params=params, json=data)
 
         if verb == "delete":
             if r.ok:

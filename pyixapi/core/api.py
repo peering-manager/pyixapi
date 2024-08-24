@@ -67,27 +67,17 @@ class API:
         self.facilities = Endpoint(self, "facilities", model=Facility)
         self.ips = Endpoint(self, "ips", model=IP)
         self.macs = Endpoint(self, "macs", model=MAC)
-        self.network_feature_configs = Endpoint(
-            self, "network-feature-configs", model=NetworkFeatureConfig
-        )
+        self.network_feature_configs = Endpoint(self, "network-feature-configs", model=NetworkFeatureConfig)
         self.network_features = Endpoint(self, "network-features", model=NetworkFeature)
-        self.network_service_configs = Endpoint(
-            self, "network-service-configs", model=NetworkServiceConfig
-        )
+        self.network_service_configs = Endpoint(self, "network-service-configs", model=NetworkServiceConfig)
         self.network_services = Endpoint(self, "network-services", model=NetworkService)
         self.pops = Endpoint(self, "pops", model=PoP)
         # Version 2+
-        self.member_joining_rules = Endpoint(
-            self, "member-joining-rules", model=MemberJoiningRule
-        )
+        self.member_joining_rules = Endpoint(self, "member-joining-rules", model=MemberJoiningRule)
         self.metro_areas = Endpoint(self, "metro-areas", model=MetroArea)
-        self.metro_area_networks = Endpoint(
-            self, "metro-area-networks", model=MetroAreaNetwork
-        )
+        self.metro_area_networks = Endpoint(self, "metro-area-networks", model=MetroAreaNetwork)
         self.ports = Endpoint(self, "ports", model=Port)
-        self.port_reservations = Endpoint(
-            self, "port-reservations", model=PortReservation
-        )
+        self.port_reservations = Endpoint(self, "port-reservations", model=PortReservation)
         self.roles = Endpoint(self, "roles", model=Role)
         self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
 
@@ -96,15 +86,11 @@ class API:
         """
         Get the API version of IX-API.
         """
-        return Request(
-            base=self.url, token=self.access_token, http_session=self.http_session
-        ).get_version()
+        return Request(base=self.url, token=self.access_token, http_session=self.http_session).get_version()
 
     @property
     def accounts(self) -> Endpoint:
-        return Endpoint(
-            self, "customers" if self.version == 1 else "accounts", model=Account
-        )
+        return Endpoint(self, "customers" if self.version == 1 else "accounts", model=Account)
 
     @property
     def product_offerings(self) -> Endpoint:
@@ -132,9 +118,9 @@ class API:
         if self.refresh_token and not self.refresh_token.is_expired:
             return self.refresh_authentication()
 
-        r = Request(
-            cat(self.url, "auth", "token"), http_session=self.http_session
-        ).post(data={"api_key": self.key, "api_secret": self.secret})
+        r = Request(cat(self.url, "auth", "token"), http_session=self.http_session).post(
+            data={"api_key": self.key, "api_secret": self.secret}
+        )
 
         self.access_token = Token.from_jwt(r["access_token"])
         self.refresh_token = Token.from_jwt(r["refresh_token"])
@@ -165,6 +151,4 @@ class API:
         if self.version == 1:
             return {}
 
-        return Request(
-            base=self.url, token=self.access_token, http_session=self.http_session
-        ).get_health()
+        return Request(base=self.url, token=self.access_token, http_session=self.http_session).get_health()
