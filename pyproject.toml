@@ -34,18 +34,32 @@ exclude = [".git", ".tox", ".venv", "env", "_build", "build", "dist", "examples"
 preview = true
 
 select = [
-    "C90", # mccabe complexity
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # pyflakes
-    "I",   # isort-like checks
-    "DTZ", # flake8-datetimez
-    "ICN", # flake8-import-conventions
-    "TCH", # flake8-type-checking
-    "T10", # flake8-debugger
-    "Q",   # flake8-quotes
-    "YTT", # flake8-2020
+    "ASYNC", # flake8-async
+    "B",     # flake8-bugbear
+    "C4",    # flake8-comprehensions
+    "C90",   # mccabe complexity
+    "DTZ",   # flake8-datetimez
+    "E",     # pycodestyle errors
+    "EXE",   # flake8-executable
+    "F",     # pyflakes
+    "I",     # isort-like checks
+    "ICN",   # flake8-import-conventions
+    "INP",   # flake8-no-pep420
+    "N",     # pep8-naming
+    "PIE",   # flake8-pie
+    "PL",    # pylint
+    "PTH",   # flake8-use-pathlib
+    "PYI",   # flake8-pyi
+    "Q",     # flake8-quotes
+    "RET",   # flake8-return
+    "TCH",   # flake8-type-checking
+    "T10",   # flake8-debugger
+    "UP",    # pyupgrade
+    "W",     # pycodestyle warnings
+    "YTT",   # flake8-2020
 ]
+
+ignore = ["PLR0913", "PLR0917", "PLW3201"]
 
 task-tags = ["FIXME", "TODO", "XXX"]
 
@@ -54,9 +68,6 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
-
-[tool.ruff.lint.isort]
-known-first-party = ["pyixapi"]
 
 [tool.ruff.lint.pycodestyle]
 max-line-length = 88

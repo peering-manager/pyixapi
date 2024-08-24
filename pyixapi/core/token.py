@@ -4,11 +4,11 @@ from datetime import datetime, timezone
 import jwt
 
 
-class TokenException(Exception):
+class TokenError(Exception):
     pass
 
 
-class InvalidTokenException(Exception):
+class InvalidTokenError(Exception):
     pass
 
 
@@ -26,8 +26,8 @@ class Token:
     """
 
     def __init__(self, token: str, expires_at: datetime) -> None:
-        self.encoded: str = token  # Cache signed token data
-        self.expires_at: datetime = expires_at
+        self.encoded = token  # Cache signed token data
+        self.expires_at = expires_at
 
     def __str__(self) -> str:
         return self.encoded
@@ -40,6 +40,7 @@ class Token:
         warnings.warn(
             "Property 'issued_at' is deprecated and value will always be set to now.",
             DeprecationWarning,
+            stacklevel=1,
         )
         return datetime.now(tz=timezone.utc)
 
@@ -69,7 +70,7 @@ class Token:
         try:
             payload = jwt.decode(token, options={"verify_signature": False})
         except Exception as e:
-            raise TokenException(e)
+            raise TokenError(e) from e
 
         try:
             return cls(
@@ -77,4 +78,4 @@ class Token:
                 expires_at=datetime.fromtimestamp(payload["exp"], tz=timezone.utc),
             )
         except Exception as e:
-            raise InvalidTokenException(e)
+            raise InvalidTokenError(e) from e
