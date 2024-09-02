@@ -1,3 +1,5 @@
+from typing import Any
+
 import requests
 
 from pyixapi.core.endpoint import Endpoint
@@ -32,7 +34,7 @@ from pyixapi.models import (
 __version__ = "0.2.2"
 
 
-class API(object):
+class API:
     """
     The API object is the entrypoint for pyixapi.
 
@@ -42,13 +44,13 @@ class API(object):
 
     def __init__(
         self,
-        url,
-        key,
-        secret,
-        access_token="",
-        refresh_token="",
-        user_agent=f"pyixapi/{__version__}",
-    ):
+        url: str,
+        key: str,
+        secret: str,
+        access_token: str = "",
+        refresh_token: str = "",
+        user_agent: str = f"pyixapi/{__version__}",
+    ) -> None:
         self.url = url.rstrip("/")
         self.key = key
         self.secret = secret
@@ -65,54 +67,40 @@ class API(object):
         self.facilities = Endpoint(self, "facilities", model=Facility)
         self.ips = Endpoint(self, "ips", model=IP)
         self.macs = Endpoint(self, "macs", model=MAC)
-        self.network_feature_configs = Endpoint(
-            self, "network-feature-configs", model=NetworkFeatureConfig
-        )
+        self.network_feature_configs = Endpoint(self, "network-feature-configs", model=NetworkFeatureConfig)
         self.network_features = Endpoint(self, "network-features", model=NetworkFeature)
-        self.network_service_configs = Endpoint(
-            self, "network-service-configs", model=NetworkServiceConfig
-        )
+        self.network_service_configs = Endpoint(self, "network-service-configs", model=NetworkServiceConfig)
         self.network_services = Endpoint(self, "network-services", model=NetworkService)
         self.pops = Endpoint(self, "pops", model=PoP)
         # Version 2+
-        self.member_joining_rules = Endpoint(
-            self, "member-joining-rules", model=MemberJoiningRule
-        )
+        self.member_joining_rules = Endpoint(self, "member-joining-rules", model=MemberJoiningRule)
         self.metro_areas = Endpoint(self, "metro-areas", model=MetroArea)
-        self.metro_area_networks = Endpoint(
-            self, "metro-area-networks", model=MetroAreaNetwork
-        )
+        self.metro_area_networks = Endpoint(self, "metro-area-networks", model=MetroAreaNetwork)
         self.ports = Endpoint(self, "ports", model=Port)
-        self.port_reservations = Endpoint(
-            self, "port-reservations", model=PortReservation
-        )
+        self.port_reservations = Endpoint(self, "port-reservations", model=PortReservation)
         self.roles = Endpoint(self, "roles", model=Role)
         self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
 
     @property
-    def version(self):
+    def version(self) -> int:
         """
         Get the API version of IX-API.
         """
-        return Request(
-            base=self.url, token=self.access_token, http_session=self.http_session
-        ).get_version()
+        return Request(base=self.url, token=self.access_token, http_session=self.http_session).get_version()
 
     @property
-    def accounts(self):
-        return Endpoint(
-            self, "customers" if self.version == 1 else "accounts", model=Account
-        )
+    def accounts(self) -> Endpoint:
+        return Endpoint(self, "customers" if self.version == 1 else "accounts", model=Account)
 
     @property
-    def product_offerings(self):
+    def product_offerings(self) -> Endpoint:
         return Endpoint(
             self,
             "products" if self.version == 1 else "product-offerings",
             model=ProductOffering,
         )
 
-    def authenticate(self):
+    def authenticate(self) -> Record:
         """
         Authenticate and generate a pair of tokens.
 
@@ -130,16 +118,16 @@ class API(object):
         if self.refresh_token and not self.refresh_token.is_expired:
             return self.refresh_authentication()
 
-        r = Request(
-            cat(self.url, "auth", "token"), http_session=self.http_session
-        ).post(data={"api_key": self.key, "api_secret": self.secret})
+        r = Request(cat(self.url, "auth", "token"), http_session=self.http_session).post(
+            data={"api_key": self.key, "api_secret": self.secret}
+        )
 
         self.access_token = Token.from_jwt(r["access_token"])
         self.refresh_token = Token.from_jwt(r["refresh_token"])
 
         return Record(r, self, self.auth)
 
-    def refresh_authentication(self):
+    def refresh_authentication(self) -> Record:
         """
         Prolong authentication by refreshing the tokens pair.
         """
@@ -154,7 +142,7 @@ class API(object):
 
         return Record(r, self, self.auth)
 
-    def health(self):
+    def health(self) -> dict[str, Any]:
         """
         Get the health information from IX-API.
 
@@ -163,6 +151,4 @@ class API(object):
         if self.version == 1:
             return {}
 
-        return Request(
-            base=self.url, token=self.access_token, http_session=self.http_session
-        ).get_health()
+        return Request(base=self.url, token=self.access_token, http_session=self.http_session).get_health()
