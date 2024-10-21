@@ -50,7 +50,7 @@ class ApiVersionTestCase(unittest.TestCase):
     class ResponseWithSuccess:
         ok = True
 
-        def json(self):
+        def json(self):  # noqa: PLR6301
             return {"status": "pass", "version": 2}
 
     @patch(
@@ -74,7 +74,7 @@ class ApiHealthTestCase(unittest.TestCase):
     class ResponseWithHealth:
         ok = True
 
-        def json(self):
+        def json(self):  # noqa: PLR6301
             return {"status": "pass", "version": "2"}
 
     @patch(
