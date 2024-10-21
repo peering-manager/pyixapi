@@ -23,7 +23,7 @@ requests = ">=2.20.0,<3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
-ruff = "~0.6"
+ruff = ">=0.6,<0.8"
 
 [tool.ruff]
 line-length = 88
