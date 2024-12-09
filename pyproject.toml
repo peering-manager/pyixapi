@@ -18,7 +18,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-PyJWT = ">=2.4.0,<2.10"
+PyJWT = ">=2.4.0,<2.11"
 requests = ">=2.20.0,<3.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -58,9 +58,6 @@ line-ending = "auto"
 
 [tool.ruff.lint.isort]
 known-first-party = ["pyixapi"]
-
-[tool.ruff.lint.pycodestyle]
-max-line-length = 88
 
 [tool.ruff.lint.mccabe]
 max-complexity = 31
