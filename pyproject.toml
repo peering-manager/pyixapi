@@ -18,7 +18,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-PyJWT = ">=2.4.0,<2.10"
+PyJWT = ">=2.4.0,<2.11"
 requests = ">=2.20.0,<3.0"
 
 [tool.poetry.group.dev.dependencies]
