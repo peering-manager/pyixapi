@@ -23,7 +23,7 @@ requests = ">=2.20.0,<3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
-ruff = "~0.8"
+ruff = ">=0.8,<0.10"
 
 [tool.ruff]
 target-version = "py39"
