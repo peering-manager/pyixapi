@@ -1,11 +1,11 @@
-[tool.poetry]
+[project]
 name = "pyixapi"
 version = "0.2.3"
 description = "Python API client library for IX-API"
-authors = ["Guillaume Mazoyer <oss@mazoyer.eu>"]
+authors = [{ name = "Guillaume Mazoyer", email = "oss@mazoyer.eu" }]
 readme = "README.md"
 license = "Apache-2.0"
-packages = [{ include = "pyixapi" }]
+requires-python = ">=3.9"
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
@@ -15,25 +15,20 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
+dependencies = ["PyJWT>=2.4.0,<2.11", "requests>=2.20.0,<3.0"]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-PyJWT = ">=2.4.0,<2.11"
-requests = ">=2.20.0,<3.0"
+[project.optional-dependencies]
+dev = ["pytest", "ruff>=0.9,<0.10"]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "*"
-ruff = "~0.8"
+[tool.poetry]
+requires-poetry = ">=2.0"
+packages = [{ include = "pyixapi" }]
 
 [tool.ruff]
-target-version = "py39"
 line-length = 120
-
 exclude = [".git", ".tox", ".venv", "env", "_build", "build", "dist", "examples", "__main__.py"]
 
 [tool.ruff.lint]
-preview = true
-
 select = [
     "C90", # mccabe complexity
     "E",   # pycodestyle errors
@@ -63,5 +58,5 @@ known-first-party = ["pyixapi"]
 max-complexity = 31
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
