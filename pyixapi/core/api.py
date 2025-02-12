@@ -48,6 +48,7 @@ class API(object):
         access_token="",
         refresh_token="",
         user_agent=f"pyixapi/{__version__}",
+        proxies=None,
     ):
         self.url = url.rstrip("/")
         self.key = key
@@ -56,6 +57,7 @@ class API(object):
         self.refresh_token = Token.from_jwt(refresh_token) if refresh_token else None
         self.http_session = requests.Session()
         self.user_agent = user_agent
+        self.proxies = proxies
 
         self.auth = Endpoint(self, "auth")
         self.connections = Endpoint(self, "connections", model=Connection)
@@ -84,7 +86,13 @@ class API(object):
         """
         Get the API version of IX-API.
         """
-        return Request(base=self.url, token=self.access_token, http_session=self.http_session).get_version()
+        return Request(
+            base=self.url,
+            token=self.access_token,
+            http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.api.proxies,
+        ).get_version()
 
     @property
     def accounts(self):
@@ -116,9 +124,12 @@ class API(object):
         if self.refresh_token and not self.refresh_token.is_expired:
             return self.refresh_authentication()
 
-        r = Request(cat(self.url, "auth", "token"), http_session=self.http_session).post(
-            data={"api_key": self.key, "api_secret": self.secret}
-        )
+        r = Request(
+            cat(self.url, "auth", "token"),
+            http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.api.proxies,
+        ).post(data={"api_key": self.key, "api_secret": self.secret})
 
         self.access_token = Token.from_jwt(r["access_token"])
         self.refresh_token = Token.from_jwt(r["refresh_token"])
@@ -133,6 +144,8 @@ class API(object):
             cat(self.url, "auth", "refresh"),
             token=self.refresh_token.encoded,
             http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.proxies,
         ).post(data={"refresh_token": self.refresh_token.encoded})
 
         self.access_token = Token.from_jwt(r["access_token"])
@@ -149,4 +162,10 @@ class API(object):
         if self.version == 1:
             return {}
 
-        return Request(base=self.url, token=self.access_token, http_session=self.http_session).get_health()
+        return Request(
+            base=self.url,
+            token=self.access_token,
+            http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.proxies,
+        ).get_health()
