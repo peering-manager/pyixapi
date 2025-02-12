@@ -91,7 +91,7 @@ class API(object):
             token=self.access_token,
             http_session=self.http_session,
             user_agent=self.user_agent,
-            proxies=self.api.proxies,
+            proxies=self.proxies,
         ).get_version()
 
     @property
@@ -128,7 +128,7 @@ class API(object):
             cat(self.url, "auth", "token"),
             http_session=self.http_session,
             user_agent=self.user_agent,
-            proxies=self.api.proxies,
+            proxies=self.proxies,
         ).post(data={"api_key": self.key, "api_secret": self.secret})
 
         self.access_token = Token.from_jwt(r["access_token"])
