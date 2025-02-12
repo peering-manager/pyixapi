@@ -139,6 +139,7 @@ class Request(object):
             headers=headers,
             params=params,
             json=data,
+            user_agent=self.user_agent,
             proxies=self.proxies,
         )
 
