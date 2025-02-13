@@ -61,7 +61,16 @@ class Request(object):
         dict.
     """
 
-    def __init__(self, base, http_session, filters=None, key=None, token=None, user_agent=None):
+    def __init__(
+        self,
+        base,
+        http_session,
+        filters=None,
+        key=None,
+        token=None,
+        user_agent=None,
+        proxies=None,
+    ):
         self.base = base
         self.filters = filters or None
         self.key = key
@@ -69,6 +78,7 @@ class Request(object):
         self.http_session = http_session
         self.url = self.base if not key else cat(self.base, key)
         self.user_agent = user_agent
+        self.proxies = proxies
 
     def get_openapi(self):
         """
@@ -124,7 +134,14 @@ class Request(object):
             if add_params:
                 params.update(add_params)
 
-        r = getattr(self.http_session, verb)(url_override or self.url, headers=headers, params=params, json=data)
+        r = getattr(self.http_session, verb)(
+            url_override or self.url,
+            headers=headers,
+            params=params,
+            json=data,
+            user_agent=self.user_agent,
+            proxies=self.proxies,
+        )
 
         if verb == "delete":
             if r.ok:

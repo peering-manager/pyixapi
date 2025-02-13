@@ -290,6 +290,8 @@ class Record(object):
                 base=self.endpoint.url,
                 token=self.api.access_token,
                 http_session=self.api.http_session,
+                user_agent=self.user_agent,
+                proxies=self.api.proxies,
             )
             if r.patch(updates):
                 return True
@@ -316,5 +318,7 @@ class Record(object):
             base=self.endpoint.url,
             token=self.api.access_token,
             http_session=self.api.http_session,
+            user_agent=self.user_agent,
+            proxies=self.api.proxies,
         )
         return True if r.delete() else False
