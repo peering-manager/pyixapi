@@ -28,7 +28,7 @@ class Endpoint(object):
             base=self.url,
             token=self.api.access_token,
             http_session=self.api.http_session,
-            user_agent=self.user_agent,
+            user_agent=self.api.user_agent,
             proxies=self.api.proxies,
         )
         return RecordSet(self, r)
@@ -43,7 +43,7 @@ class Endpoint(object):
             base=self.url,
             token=self.api.access_token,
             http_session=self.api.http_session,
-            user_agent=self.user_agent,
+            user_agent=self.api.user_agent,
             proxies=self.api.proxies,
         )
         return RecordSet(self, r)
@@ -78,7 +78,7 @@ class Endpoint(object):
             base=self.url,
             token=self.api.access_token,
             http_session=self.api.http_session,
-            user_agent=self.user_agent,
+            user_agent=self.api.user_agent,
             proxies=self.api.proxies,
         )
         try:
@@ -100,7 +100,7 @@ class Endpoint(object):
             base=self.url,
             token=self.api.access_token,
             http_session=self.api.http_session,
-            user_agent=self.user_agent,
+            user_agent=self.api.user_agent,
             proxies=self.api.proxies,
         ).post(args[0] if args else kwargs)
 

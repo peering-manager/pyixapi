@@ -1,6 +1,6 @@
 [project]
 name = "pyixapi"
-version = "0.2.4"
+version = "0.2.5"
 description = "Python API client library for IX-API"
 authors = [{ name = "Guillaume Mazoyer", email = "oss@mazoyer.eu" }]
 readme = "README.md"
