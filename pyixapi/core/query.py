@@ -127,6 +127,9 @@ class Request(object):
         if self.token:
             headers["Authorization"] = f"Bearer {self.token}"
 
+        if self.user_agent:
+            headers["User-Agent"] = self.user_agent
+
         params = {}
         if not url_override:
             if self.filters:
@@ -139,7 +142,6 @@ class Request(object):
             headers=headers,
             params=params,
             json=data,
-            user_agent=self.user_agent,
             proxies=self.proxies,
         )
 
