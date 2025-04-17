@@ -67,27 +67,17 @@ class API(object):
         self.facilities = Endpoint(self, "facilities", model=Facility)
         self.ips = Endpoint(self, "ips", model=IP)
         self.macs = Endpoint(self, "macs", model=MAC)
-        self.network_feature_configs = Endpoint(
-            self, "network-feature-configs", model=NetworkFeatureConfig
-        )
+        self.network_feature_configs = Endpoint(self, "network-feature-configs", model=NetworkFeatureConfig)
         self.network_features = Endpoint(self, "network-features", model=NetworkFeature)
-        self.network_service_configs = Endpoint(
-            self, "network-service-configs", model=NetworkServiceConfig
-        )
+        self.network_service_configs = Endpoint(self, "network-service-configs", model=NetworkServiceConfig)
         self.network_services = Endpoint(self, "network-services", model=NetworkService)
         self.pops = Endpoint(self, "pops", model=PoP)
         # Version 2+
-        self.member_joining_rules = Endpoint(
-            self, "member-joining-rules", model=MemberJoiningRule
-        )
+        self.member_joining_rules = Endpoint(self, "member-joining-rules", model=MemberJoiningRule)
         self.metro_areas = Endpoint(self, "metro-areas", model=MetroArea)
-        self.metro_area_networks = Endpoint(
-            self, "metro-area-networks", model=MetroAreaNetwork
-        )
+        self.metro_area_networks = Endpoint(self, "metro-area-networks", model=MetroAreaNetwork)
         self.ports = Endpoint(self, "ports", model=Port)
-        self.port_reservations = Endpoint(
-            self, "port-reservations", model=PortReservation
-        )
+        self.port_reservations = Endpoint(self, "port-reservations", model=PortReservation)
         self.roles = Endpoint(self, "roles", model=Role)
         self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
 
@@ -106,9 +96,7 @@ class API(object):
 
     @property
     def accounts(self):
-        return Endpoint(
-            self, "customers" if self.version == 1 else "accounts", model=Account
-        )
+        return Endpoint(self, "customers" if self.version == 1 else "accounts", model=Account)
 
     @property
     def product_offerings(self):
