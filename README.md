@@ -4,7 +4,7 @@ Python API client library for [IX-API](https://ix-api.net/).
 
 Supported versions are:
 
-* [version 1](https://docs.ix-api.net/v1/)
+* [version 1](https://docs.ix-api.net/v1/) -- deprecated, providers cease date is 2026-07-01
 * [version 2](https://docs.ix-api.net/v2/)
 
 ## Installation
@@ -18,7 +18,7 @@ To begin, import pyixapi and instantiate the API.
 ```python
 import pyixapi
 ixapi = pyixapi.api(
-    "https://api.de-cix.net/api/v1/",
+    "https://api.de-cix.net/api/v2/",
     "3LH3G72VH7H1SGogEsFeQOPsGjOQotMUZQRt2pK7YbH",
     "cEtrt8s0vR0CsG0vpAmcaxtnolzZj7DEG0B7izvwPlV",
 )

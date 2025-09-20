@@ -1,4 +1,5 @@
 import unittest
+import warnings
 from unittest.mock import patch
 
 import pyixapi
@@ -53,18 +54,19 @@ class ApiVersionTestCase(unittest.TestCase):
         def json(self):
             return {"status": "pass", "version": 2}
 
-    @patch(
-        "requests.sessions.Session.get",
-        return_value=ResponseWithFailure(),
-    )
+    @patch("requests.sessions.Session.get", return_value=ResponseWithFailure())
     def test_api_version_1(self, *_) -> None:
-        api = pyixapi.api(host, *def_args)
-        self.assertEqual(api.version, 1)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
 
-    @patch(
-        "requests.sessions.Session.get",
-        return_value=ResponseWithSuccess(),
-    )
+            api = pyixapi.api(host, *def_args)
+            self.assertEqual(api.version, 1)
+
+            assert w
+            assert issubclass(w[0].category, DeprecationWarning)
+            assert "deprecated" in str(w[-1].message)
+
+    @patch("requests.sessions.Session.get", return_value=ResponseWithSuccess())
     def test_api_version(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.version, 2)
@@ -77,10 +79,7 @@ class ApiHealthTestCase(unittest.TestCase):
         def json(self):
             return {"status": "pass", "version": "2"}
 
-    @patch(
-        "requests.sessions.Session.get",
-        return_value=ResponseWithHealth(),
-    )
+    @patch("requests.sessions.Session.get", return_value=ResponseWithHealth())
     def test_api_status(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.health()["status"], "pass")

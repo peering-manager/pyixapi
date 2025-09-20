@@ -1,3 +1,5 @@
+import warnings
+
 import requests
 
 from pyixapi.core.endpoint import Endpoint
@@ -82,17 +84,26 @@ class API(object):
         self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
 
     @property
-    def version(self):
+    def version(self) -> int:
         """
         Get the API version of IX-API.
         """
-        return Request(
+        version = Request(
             base=self.url,
             token=self.access_token,
             http_session=self.http_session,
             user_agent=self.user_agent,
             proxies=self.proxies,
         ).get_version()
+
+        if version == 1:
+            warnings.warn(
+                "IX-API version 1 is deprecated and will not be supported in future releases of pyixapi.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+        return version
 
     @property
     def accounts(self):

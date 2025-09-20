@@ -97,7 +97,7 @@ class Request(object):
 
         Issue a GET request to the health endpoint to read the API version.
 
-        If a RequestError is raised, it is catched and the version is considered as
+        If a RequestError is raised, it is caught and the version is considered as
         equal to 1 (IX-API v1 does not have a health endpoint).
         """
         try:
