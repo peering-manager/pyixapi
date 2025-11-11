@@ -5,20 +5,20 @@ description = "Python API client library for IX-API"
 authors = [{ name = "Guillaume Mazoyer", email = "oss@mazoyer.eu" }]
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = ["PyJWT>=2.4.0,<2.11", "requests>=2.32.4,<3.0"]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff>=0.9,<0.10"]
+dev = ["pytest", "ruff>=0.14,<0.15"]
 
 [tool.poetry]
 requires-poetry = ">=2.0"
