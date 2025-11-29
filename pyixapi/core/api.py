@@ -31,7 +31,7 @@ from pyixapi.models import (
     RoleAssignment,
 )
 
-__version__ = "0.2.6"
+__version__ = "0.2.7"
 
 
 class API(object):
