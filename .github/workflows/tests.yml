@@ -40,6 +40,9 @@ jobs:
       run: |
         uv run ruff format --check --diff .
         uv run ruff check --diff .
+    
+    - name: Run type checking
+      run: uv run ty check .
 
     - name: Run Tests
       run: uv run pytest
