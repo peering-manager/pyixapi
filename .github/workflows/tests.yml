@@ -27,19 +27,19 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
 
-    - name: Install Poetry
-      run: pipx install poetry
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
 
-    - name: Validate pyproject.toml and poetry.lock
-      run: poetry check
+    - name: Validate pyproject.toml and uv.lock
+      run: uv lock --locked --offline --no-cache --check
 
     - name: Install dependencies
-      run: poetry install --extras=dev
+      run: uv sync --locked --all-groups
 
     - name: Run format and lint
       run: |
-        poetry run ruff format --check --diff .
-        poetry run ruff check --diff .
+        uv run ruff format --check --diff .
+        uv run ruff check --diff .
 
     - name: Run Tests
-      run: poetry run pytest
+      run: uv run pytest
