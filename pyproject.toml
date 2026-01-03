@@ -17,8 +17,8 @@ classifiers = [
 ]
 dependencies = ["PyJWT>=2.4.0,<2.11", "requests>=2.32.4,<3.0"]
 
-[project.optional-dependencies]
-dev = ["pytest", "ruff>=0.14,<0.15"]
+[dependency-groups]
+dev = ["pytest", "ruff", "ty"]
 
 [tool.poetry]
 requires-poetry = ">=2.0"
@@ -57,6 +57,14 @@ known-first-party = ["pyixapi"]
 [tool.ruff.lint.mccabe]
 max-complexity = 31
 
+[tool.ty.rules]
+unresolved-attribute = "ignore"
+invalid-return-type = "ignore"
+unresolved-import = "ignore"
+
 [build-system]
-requires = ["poetry-core>=2.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.21,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = "."
