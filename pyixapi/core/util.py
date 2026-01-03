@@ -1,8 +1,8 @@
 from typing import Any
 
 
-class Hashabledict(dict):
-    def __hash__(self):
+class Hashabledict(dict):  # type: ignore[type-arg]
+    def __hash__(self) -> int:
         return hash(frozenset(self))
 
 

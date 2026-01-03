@@ -1,4 +1,5 @@
 import warnings
+from typing import Any
 
 import requests
 
@@ -44,14 +45,14 @@ class API(object):
 
     def __init__(
         self,
-        url,
-        key,
-        secret,
-        access_token="",
-        refresh_token="",
-        user_agent=f"pyixapi/{__version__}",
-        proxies=None,
-    ):
+        url: str,
+        key: str,
+        secret: str,
+        access_token: str = "",
+        refresh_token: str = "",
+        user_agent: str = f"pyixapi/{__version__}",
+        proxies: dict[str, str] | None = None,
+    ) -> None:
         self.url = url.rstrip("/")
         self.key = key
         self.secret = secret
@@ -106,18 +107,18 @@ class API(object):
         return version
 
     @property
-    def accounts(self):
+    def accounts(self) -> Endpoint:
         return Endpoint(self, "customers" if self.version == 1 else "accounts", model=Account)
 
     @property
-    def product_offerings(self):
+    def product_offerings(self) -> Endpoint:
         return Endpoint(
             self,
             "products" if self.version == 1 else "product-offerings",
             model=ProductOffering,
         )
 
-    def authenticate(self):
+    def authenticate(self) -> Record | None:
         """
         Authenticate and generate a pair of tokens.
 
@@ -147,13 +148,16 @@ class API(object):
 
         return Record(r, self, self.auth)
 
-    def refresh_authentication(self):
+    def refresh_authentication(self) -> Record:
         """
         Prolong authentication by refreshing the tokens pair.
         """
+        if not self.refresh_token:
+            raise ValueError("No refresh token available to refresh authentication")
+
         r = Request(
             cat(self.url, "auth", "refresh"),
-            token=self.refresh_token.encoded,
+            token=self.refresh_token,
             http_session=self.http_session,
             user_agent=self.user_agent,
             proxies=self.proxies,
@@ -164,7 +168,7 @@ class API(object):
 
         return Record(r, self, self.auth)
 
-    def health(self):
+    def health(self) -> dict[str, Any]:
         """
         Get the health information from IX-API.
 

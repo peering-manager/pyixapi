@@ -1,6 +1,13 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 from pyixapi.core.query import Request, RequestError
 from pyixapi.core.response import Record, RecordSet
 from pyixapi.core.util import cat
+
+if TYPE_CHECKING:
+    from pyixapi.core.api import API
 
 
 class Endpoint(object):
@@ -11,16 +18,16 @@ class Endpoint(object):
     object.
     """
 
-    def __init__(self, api, name, model=None):
-        self.return_obj = model if model else Record
+    def __init__(self, api: API, name: str, model: type[Record] | None = None) -> None:
+        self.return_obj: type[Record] = model if model else Record
         self.api = api
         self.url = cat(api.url, name)
         self.name = name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.url
 
-    def all(self):
+    def all(self) -> RecordSet:
         """
         Return all objects from an endpoint.
         """
@@ -33,7 +40,7 @@ class Endpoint(object):
         )
         return RecordSet(self, r)
 
-    def filter(self, *args, **kwargs):
+    def filter(self, *args: Any, **kwargs: Any) -> RecordSet:
         """
         Query the list of a given endpoint. Also take named arguments that match the
         usable filters on a given endpoint.
@@ -48,7 +55,7 @@ class Endpoint(object):
         )
         return RecordSet(self, r)
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Any, **kwargs: Any) -> Record | None:
         """
         Return a single object from an endpoint.
         """
@@ -89,7 +96,7 @@ class Endpoint(object):
             else:
                 raise e
 
-    def create(self, *args, **kwargs):
+    def create(self, *args: Any, **kwargs: Any) -> Record:
         """
         Creates an object on an endpoint.
 

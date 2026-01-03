@@ -1,8 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Iterator
+
 from pyixapi.core.query import Request
 from pyixapi.core.util import Hashabledict
 
+if TYPE_CHECKING:
+    from pyixapi.core.api import API
+    from pyixapi.core.endpoint import Endpoint
 
-def get_return(lookup):
+
+def get_return(lookup: Any) -> Any:
     """
     Return simple representations for items passed to lookup.
 
@@ -52,21 +60,21 @@ class RecordSet(object):
     >>>
     """
 
-    def __init__(self, endpoint, request, **kwargs):
+    def __init__(self, endpoint: Endpoint, request: Request, **kwargs: Any) -> None:
         self.endpoint = endpoint
         self.request = request
         self.response = self.request.get()
-        self._response_cache = []
+        self._response_cache: list[dict[str, Any]] = []
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Record]:
         return self
 
-    def __next__(self):
+    def __next__(self) -> Record:
         if self._response_cache:
             return self.endpoint.return_obj(self._response_cache.pop(), self.endpoint.api, self.endpoint)
         return self.endpoint.return_obj(next(self.response), self.endpoint.api, self.endpoint)
 
-    def __len__(self):
+    def __len__(self) -> int:
         try:
             return self.request.count
         except AttributeError:
@@ -138,18 +146,18 @@ class Record(object):
     >>>
     """
 
-    url = None
+    url: str | None = None
 
-    def __init__(self, values, api, endpoint):
-        self._full_cache = []
-        self._init_cache = []
+    def __init__(self, values: dict[str, Any], api: API, endpoint: Endpoint) -> None:
+        self._full_cache: list[Any] = []
+        self._init_cache: list[tuple[str, Any]] = []
         self.api = api
-        self.default_ret = Record
+        self.default_ret: type[Record] = Record
         self.endpoint = endpoint
         if values:
             self._parse_values(values)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[tuple[str, Any]]:
         for i in dict(self._init_cache):
             a = getattr(self, i)
             if isinstance(a, Record):
@@ -159,48 +167,48 @@ class Record(object):
             else:
                 yield i, a
 
-    def __getitem__(self, k):
+    def __getitem__(self, k: str) -> Any:
         return dict(self)[k]
 
-    def __str__(self):
+    def __str__(self) -> str:
         if hasattr(self, "id"):
             return self.id
         else:
             return str(self.endpoint)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(dict(self))
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         return self.__dict__
 
-    def __setstate__(self, d):
+    def __setstate__(self, d: dict[str, Any]) -> None:
         self.__dict__.update(d)
 
-    def __key__(self):
+    def __key__(self) -> tuple[str, ...] | tuple[str]:
         if hasattr(self, "id"):
             return (self.endpoint.name, self.id)
         else:
-            return self.endpoint.name
+            return (self.endpoint.name,)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__key__())
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Record):
             return self.__key__() == other.__key__()
         return NotImplemented
 
-    def _add_cache(self, item):
+    def _add_cache(self, item: tuple[str, Any]) -> None:
         key, value = item
         self._init_cache.append((key, get_return(value)))
 
-    def _parse_values(self, values):
+    def _parse_values(self, values: dict[str, Any]) -> None:
         """
         Parse values dict at init and sets object attributes with the values within.
         """
 
-        def list_parser(key_name, list_item):
+        def list_parser(key_name: str, list_item: Any) -> Any:
             if isinstance(list_item, dict):
                 lookup = getattr(self.__class__, key_name, None)
                 if not isinstance(lookup, list):
@@ -226,7 +234,7 @@ class Record(object):
                 self._add_cache((k, v))
             setattr(self, k, v)
 
-    def serialize(self, nested=False, init=False):
+    def serialize(self, nested: bool = False, init: bool = False) -> Any:
         """
         Pull all the attributes in an object and create a dict that can be turned into
         the JSON that IX-API is expecting.
@@ -240,7 +248,7 @@ class Record(object):
         if init:
             init_vals = dict(self._init_cache)
 
-        r = {}
+        r: dict[str, Any] = {}
         for i in dict(self):
             current_val = getattr(self, i) if not init else init_vals.get(i)
             if isinstance(current_val, Record):
@@ -250,8 +258,8 @@ class Record(object):
             r[i] = current_val
         return r
 
-    def _diff(self):
-        def fmt_dict(k, v):
+    def _diff(self) -> set[str]:
+        def fmt_dict(k: str, v: Any) -> tuple[str, Any]:
             if isinstance(v, dict):
                 return k, Hashabledict(v)
             if isinstance(v, list):
@@ -262,7 +270,7 @@ class Record(object):
         init = Hashabledict({fmt_dict(k, v) for k, v in self.serialize(init=True).items()})
         return set([i[0] for i in set(current.items()) ^ set(init.items())])
 
-    def updates(self):
+    def updates(self) -> dict[str, Any]:
         """
         Compile changes for an existing object into a dict.
 
@@ -276,7 +284,7 @@ class Record(object):
                 return {i: serialized[i] for i in diff}
         return {}
 
-    def save(self):
+    def save(self) -> bool:
         """
         Save changes to an existing object.
 
@@ -297,7 +305,7 @@ class Record(object):
                 return True
         return False
 
-    def update(self, data):
+    def update(self, data: dict[str, Any]) -> bool:
         """
         Update an object with a dictionary.
 
@@ -309,7 +317,7 @@ class Record(object):
             setattr(self, k, v)
         return self.save()
 
-    def delete(self):
+    def delete(self) -> bool:
         """
         Delete an existing object.
         """
