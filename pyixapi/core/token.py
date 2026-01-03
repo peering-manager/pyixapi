@@ -49,7 +49,7 @@ class Token:
         TTL is the number of seconds, from now, before the token expires.
         """
         seconds = (self.expires_at - datetime.now(timezone.utc)).total_seconds()
-        return max(0, seconds)
+        return max(0, int(seconds))
 
     @property
     def is_expired(self) -> bool:

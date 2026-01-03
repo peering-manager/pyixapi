@@ -12,7 +12,7 @@ class Account(Record):
     It is also referenced as "customer" in IX-API v1.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.id}: {self.name}"
 
 
@@ -21,7 +21,7 @@ class Connection(Record):
     A Connection is a group of physical ports collected together into a LAG.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.id}: {self.name}"
 
 
@@ -30,7 +30,7 @@ class Contact(Record):
     A Contact is a role undertaking a specific responsibility within an account.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         r = []
 
         legal_company_name = getattr(self, "legal_company_name", None)
@@ -51,7 +51,7 @@ class Demarc(Record):
     eg a physical port / socket, generally with a specified bandwidth.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -61,7 +61,7 @@ class Device(Record):
     specified facility and inside a PoP.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -71,7 +71,7 @@ class Facility(Record):
     defined set of PoPs can be accessed.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -81,18 +81,18 @@ class IP(Record):
     """
 
     @property
-    def cidr(self):
+    def cidr(self) -> ipaddress.IPv4Interface | ipaddress.IPv6Interface:
         return ipaddress.ip_interface(f"{self.address}/{self.prefix_length}")
 
     @property
-    def ip(self):
+    def ip(self) -> ipaddress.IPv4Address | ipaddress.IPv6Address:
         return self.cidr.ip
 
     @property
-    def network(self):
+    def network(self) -> ipaddress.IPv4Network | ipaddress.IPv6Network:
         return self.cidr.network
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.cidr)
 
 
@@ -101,7 +101,7 @@ class MAC(Record):
     A MAC is a MAC address with a given validity period.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.address.lower()
 
 
@@ -110,7 +110,7 @@ class NetworkFeatureConfig(Record):
     A NetworkFeatureConfig is a customer's configuration to use a NetworkFeature.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -120,7 +120,7 @@ class NetworkFeature(Record):
     NetworkService.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -130,7 +130,7 @@ class NetworkServiceConfig(Record):
     the configuration of a (subset of a) connection for that customer's traffic.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -140,7 +140,7 @@ class NetworkService(Record):
     depending on the type of product.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -150,7 +150,7 @@ class PoP(Record):
     infrastructure and has defined reachability of other facilities.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -161,7 +161,7 @@ class ProductOffering(Record):
     It is also referenced as "product" in IX-API v1.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -177,7 +177,7 @@ class MemberJoiningRule(Record):
     listed in an allow rule.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -186,7 +186,7 @@ class MetroArea(Record):
     A MetroArea exists if a MetroAreaNetwork or Facility is present in it.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.display_name
 
 
@@ -199,7 +199,7 @@ class MetroAreaNetwork(Record):
     list of IDs.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -209,7 +209,7 @@ class Port(Record):
     associated with a device and pop, has a speed and a media_type.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -223,7 +223,7 @@ class PortReservation(Record):
     Please note that individual cancellation policies might apply.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
 
 
@@ -232,7 +232,7 @@ class Role(Record):
     A Role enables a Contact to act for a specific purpose.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -241,5 +241,5 @@ class RoleAssignment(Record):
     A Contact can be assigned to many Roles.
     """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id
