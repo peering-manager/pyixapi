@@ -18,16 +18,13 @@ class RequestError(Exception):
         if r.status_code == 404:
             self.message = f"The requested url: {r.url} could not be found."
         elif r.status_code == 401:
-            self.message = (
-                "Authentication credentials are invalid, tokens renewal required."
-            )
+            self.message = "Authentication credentials are invalid, tokens renewal required."
         else:
             try:
                 self.message = f"The request failed with code {r.status_code} {r.reason}: {r.json()}"
             except ValueError:
                 self.message = (
-                    f"The request failed with code {r.status_code} {r.reason} but details were not found "
-                    "as JSON."
+                    f"The request failed with code {r.status_code} {r.reason} but details were not found as JSON."
                 )
 
         super(RequestError, self).__init__(r)
@@ -49,9 +46,7 @@ class ContentError(Exception):
         super(ContentError, self).__init__(req)
 
         self.req = req
-        self.error = (
-            "The server returned invalid (non-JSON) data. Maybe not an IX-API server?"
-        )
+        self.error = "The server returned invalid (non-JSON) data. Maybe not an IX-API server?"
 
     def __str__(self) -> str:
         return self.error
@@ -94,9 +89,7 @@ class Request(object):
         Get the OpenAPI Spec.
         """
         headers = {"Content-Type": "application/json;"}
-        req = self.http_session.get(
-            cat(self.base, "docs/?format=openapi"), headers=headers
-        )
+        req = self.http_session.get(cat(self.base, "docs/?format=openapi"), headers=headers)
         if req.ok:
             return req.json()
         else:
@@ -175,9 +168,7 @@ class Request(object):
         else:
             raise RequestError(r)
 
-    def get(
-        self, add_params: dict[str, Any] | None = None
-    ) -> Generator[dict[str, Any], None, None]:
+    def get(self, add_params: dict[str, Any] | None = None) -> Generator[dict[str, Any], None, None]:
         """
         Make a GET request to IX-API.
 
