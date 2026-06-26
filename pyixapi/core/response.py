@@ -301,7 +301,12 @@ class Record(object):
                 user_agent=self.api.user_agent,
                 proxies=self.api.proxies,
             )
-            if r.patch(updates):
+            result = r.patch(updates)
+            if result:
+                # Refresh the record from the server response
+                if isinstance(result, dict):
+                    self._init_cache = []
+                    self._parse_values(result)
                 return True
         return False
 
