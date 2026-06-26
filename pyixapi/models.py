@@ -25,6 +25,21 @@ class Connection(Record):
     def __str__(self) -> str:
         return f"{self.id}: {self.name}"
 
+    def cancellation_policy(self) -> dict[str, Any]:
+        return self._make_request("cancellation-policy")._make_call()
+
+    def get_loa(self) -> dict[str, Any]:
+        return self._make_request("loa")._make_call()
+
+    def upload_loa(self, data: dict[str, Any]) -> dict[str, Any]:
+        return self._make_request("loa")._make_call(verb="post", data=data)
+
+    def statistics(self, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request("statistics")._make_call(add_params=kwargs or None)
+
+    def statistics_timeseries(self, aggregate: str, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request(f"statistics/{aggregate}/timeseries")._make_call(add_params=kwargs or None)
+
 
 class Contact(Record):
     """
@@ -134,6 +149,21 @@ class NetworkServiceConfig(Record):
     def __str__(self) -> str:
         return self.id
 
+    def cancellation_policy(self) -> dict[str, Any]:
+        return self._make_request("cancellation-policy")._make_call()
+
+    def peer_statistics(self, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request("peer-statistics")._make_call(add_params=kwargs or None)
+
+    def peer_statistics_timeseries(self, aggregate: str, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request(f"peer-statistics/{aggregate}/timeseries")._make_call(add_params=kwargs or None)
+
+    def statistics(self, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request("statistics")._make_call(add_params=kwargs or None)
+
+    def statistics_timeseries(self, aggregate: str, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request(f"statistics/{aggregate}/timeseries")._make_call(add_params=kwargs or None)
+
 
 class NetworkService(Record):
     """
@@ -143,6 +173,27 @@ class NetworkService(Record):
 
     def __str__(self) -> str:
         return self.id
+
+    def cancellation_policy(self) -> dict[str, Any]:
+        return self._make_request("cancellation-policy")._make_call()
+
+    def change_request(self) -> dict[str, Any]:
+        return self._make_request("change-request")._make_call()
+
+    def create_change_request(self, data: dict[str, Any]) -> dict[str, Any]:
+        return self._make_request("change-request")._make_call(verb="post", data=data)
+
+    def delete_change_request(self) -> bool:
+        return self._make_request("change-request")._make_call(verb="delete")
+
+    def rtt_statistics(self, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request("rtt-statistics")._make_call(add_params=kwargs or None)
+
+    def statistics(self, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request("statistics")._make_call(add_params=kwargs or None)
+
+    def statistics_timeseries(self, aggregate: str, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request(f"statistics/{aggregate}/timeseries")._make_call(add_params=kwargs or None)
 
 
 class PoP(Record):
@@ -222,6 +273,12 @@ class Port(Record):
     def __str__(self) -> str:
         return self.name
 
+    def statistics(self, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request("statistics")._make_call(add_params=kwargs or None)
+
+    def statistics_timeseries(self, aggregate: str, **kwargs: Any) -> dict[str, Any]:
+        return self._make_request(f"statistics/{aggregate}/timeseries")._make_call(add_params=kwargs or None)
+
 
 class PortReservation(Record):
     """
@@ -235,6 +292,15 @@ class PortReservation(Record):
 
     def __str__(self) -> str:
         return self.id
+
+    def cancellation_policy(self) -> dict[str, Any]:
+        return self._make_request("cancellation-policy")._make_call()
+
+    def get_loa(self) -> dict[str, Any]:
+        return self._make_request("loa")._make_call()
+
+    def upload_loa(self, data: dict[str, Any]) -> dict[str, Any]:
+        return self._make_request("loa")._make_call(verb="post", data=data)
 
 
 class RoutingFunction(Record):
