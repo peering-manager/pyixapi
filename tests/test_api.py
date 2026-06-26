@@ -42,19 +42,10 @@ class ApiTestCase(unittest.TestCase):
 
 
 class ApiVersionTestCase(unittest.TestCase):
-    class ResponseWithFailure:
-        ok = False
-        status_code = 404
-        url = host
-        text = "Not found"
-
-    class ResponseWithSuccess:
-        ok = True
-
-        def json(self):
-            return {"status": "pass", "version": 2}
-
-    @patch("requests.sessions.Session.get", return_value=ResponseWithFailure())
+    @patch(
+        "requests.sessions.Session.get",
+        return_value=Response(status_code=404, ok=False, url=host, text="Not found"),
+    )
     def test_api_version_1(self, *_) -> None:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
@@ -66,10 +57,24 @@ class ApiVersionTestCase(unittest.TestCase):
             assert issubclass(w[0].category, DeprecationWarning)
             assert "deprecated" in str(w[-1].message)
 
-    @patch("requests.sessions.Session.get", return_value=ResponseWithSuccess())
+    @patch(
+        "requests.sessions.Session.get",
+        return_value=Response(content={"status": "pass", "version": 2}),
+    )
     def test_api_version(self, *_) -> None:
         api = pyixapi.api(host, *def_args)
         self.assertEqual(api.version, 2)
+
+    @patch(
+        "requests.sessions.Session.get",
+        return_value=Response(content={"status": "pass", "version": 2}),
+    )
+    def test_api_version_is_cached(self, mock_get) -> None:
+        api = pyixapi.api(host, *def_args)
+        self.assertEqual(api.version, 2)
+        self.assertEqual(api.version, 2)
+        api.accounts
+        mock_get.assert_called_once()
 
 
 class ApiHealthTestCase(unittest.TestCase):

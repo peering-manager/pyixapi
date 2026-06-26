@@ -61,6 +61,7 @@ class API(object):
         self.http_session = requests.Session()
         self.user_agent = user_agent
         self.proxies = proxies
+        self._version: int | None = None
 
         self.auth = Endpoint(self, "auth")
         self.connections = Endpoint(self, "connections", model=Connection)
@@ -88,7 +89,13 @@ class API(object):
     def version(self) -> int:
         """
         Get the API version of IX-API.
+
+        The version is resolved once on first access and cached for the lifetime
+        of the API instance, as it does not change between requests.
         """
+        if self._version is not None:
+            return self._version
+
         version = Request(
             base=self.url,
             token=self.access_token,
@@ -104,6 +111,7 @@ class API(object):
                 stacklevel=2,
             )
 
+        self._version = version
         return version
 
     @property
