@@ -100,3 +100,5 @@ ENV/
 
 # Visual Studio Code settings
 .vscode/
+
+pyixapi/__main__.py

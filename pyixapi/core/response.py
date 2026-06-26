@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Iterator
 
 from pyixapi.core.query import Request
-from pyixapi.core.util import Hashabledict
+from pyixapi.core.util import Hashabledict, cat
 
 if TYPE_CHECKING:
     from pyixapi.core.api import API
@@ -283,6 +283,15 @@ class Record(object):
                 serialized = self.serialize()
                 return {i: serialized[i] for i in diff}
         return {}
+
+    def _make_request(self, sub_path: str) -> Request:
+        return Request(
+            base=cat(self.endpoint.url, self.id, sub_path),
+            token=self.api.access_token,
+            http_session=self.api.http_session,
+            user_agent=self.api.user_agent,
+            proxies=self.api.proxies,
+        )
 
     def save(self) -> bool:
         """

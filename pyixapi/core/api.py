@@ -12,6 +12,7 @@ from pyixapi.models import (
     IP,
     MAC,
     Account,
+    AvailabilityZone,
     Connection,
     Contact,
     Demarc,
@@ -30,6 +31,7 @@ from pyixapi.models import (
     ProductOffering,
     Role,
     RoleAssignment,
+    RoutingFunction,
 )
 
 __version__ = "0.2.8"
@@ -66,7 +68,6 @@ class API(object):
         self.auth = Endpoint(self, "auth")
         self.connections = Endpoint(self, "connections", model=Connection)
         self.contacts = Endpoint(self, "contacts", model=Contact)
-        self.demarcs = Endpoint(self, "demarcs", model=Demarc)
         self.devices = Endpoint(self, "devices", model=Device)
         self.facilities = Endpoint(self, "facilities", model=Facility)
         self.ips = Endpoint(self, "ips", model=IP)
@@ -77,6 +78,7 @@ class API(object):
         self.network_services = Endpoint(self, "network-services", model=NetworkService)
         self.pops = Endpoint(self, "pops", model=PoP)
         # Version 2+
+        self.availability_zones = Endpoint(self, "availability-zones", model=AvailabilityZone)
         self.member_joining_rules = Endpoint(self, "member-joining-rules", model=MemberJoiningRule)
         self.metro_areas = Endpoint(self, "metro-areas", model=MetroArea)
         self.metro_area_networks = Endpoint(self, "metro-area-networks", model=MetroAreaNetwork)
@@ -84,6 +86,7 @@ class API(object):
         self.port_reservations = Endpoint(self, "port-reservations", model=PortReservation)
         self.roles = Endpoint(self, "roles", model=Role)
         self.role_assignments = Endpoint(self, "role-assignments", model=RoleAssignment)
+        self.routing_functions = Endpoint(self, "routing-functions", model=RoutingFunction)
 
     @property
     def version(self) -> int:
@@ -119,12 +122,33 @@ class API(object):
         return Endpoint(self, "customers" if self.version == 1 else "accounts", model=Account)
 
     @property
+    def demarcs(self) -> Endpoint:
+        if self.version != 1:
+            raise AttributeError("demarcs endpoint is only available in IX-API v1")
+        return Endpoint(self, "demarcs", model=Demarc)
+
+    @property
     def product_offerings(self) -> Endpoint:
         return Endpoint(
             self,
             "products" if self.version == 1 else "product-offerings",
             model=ProductOffering,
         )
+
+    def account(self) -> Account:
+        """
+        Get the authenticated user's own account.
+
+        Available in IX-API 2 or newer.
+        """
+        r = Request(
+            base=cat(self.url, "account"),
+            token=self.access_token,
+            http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.proxies,
+        )
+        return Account(r._make_call(), self, self.accounts)
 
     def authenticate(self) -> Record | None:
         """
@@ -176,6 +200,20 @@ class API(object):
 
         return Record(r, self, self.auth)
 
+    def extensions(self) -> list[dict[str, Any]]:
+        """
+        Get the list of extensions supported by the IX-API implementation.
+
+        Available in IX-API 2 or newer.
+        """
+        return Request(
+            base=cat(self.url, "extensions"),
+            token=self.access_token,
+            http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.proxies,
+        )._make_call()
+
     def health(self) -> dict[str, Any]:
         """
         Get the health information from IX-API.
@@ -192,3 +230,17 @@ class API(object):
             user_agent=self.user_agent,
             proxies=self.proxies,
         ).get_health()
+
+    def implementation(self) -> dict[str, Any]:
+        """
+        Get implementation details of the IX-API server.
+
+        Available in IX-API 2 or newer.
+        """
+        return Request(
+            base=cat(self.url, "implementation"),
+            token=self.access_token,
+            http_session=self.http_session,
+            user_agent=self.user_agent,
+            proxies=self.proxies,
+        )._make_call()

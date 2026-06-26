@@ -1,4 +1,5 @@
 import ipaddress
+from typing import Any
 
 from pyixapi.core.response import Record
 
@@ -168,6 +169,15 @@ class ProductOffering(Record):
 # Version 2 and up
 
 
+class AvailabilityZone(Record):
+    """
+    An AvailabilityZone describes the physical location or zone of a resource.
+    """
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class MemberJoiningRule(Record):
     """
     A MemberJoiningRule defines a rule to allow or deny access for an Account to a
@@ -225,6 +235,19 @@ class PortReservation(Record):
 
     def __str__(self) -> str:
         return self.id
+
+
+class RoutingFunction(Record):
+    """
+    A RoutingFunction is a function that provides routing capabilities within a
+    network service.
+    """
+
+    def __str__(self) -> str:
+        return self.id
+
+    def cancellation_policy(self) -> dict[str, Any]:
+        return self._make_request("cancellation-policy")._make_call()
 
 
 class Role(Record):
