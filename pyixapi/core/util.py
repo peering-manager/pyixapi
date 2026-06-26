@@ -24,7 +24,7 @@ def cat(*args: Any, separator: str = "/", trailing: str = "") -> str:
     >>> concatenate("a", "b", "c", separator="_", trailing="_")
     'a_b_c_'
     """
-    s = separator.join([str(i).lstrip(separator).rstrip(separator) for i in args])
+    s = separator.join([str(i).strip(separator) for i in args if str(i)])
     if trailing:
         s += trailing
     return s
