@@ -90,11 +90,11 @@ class Record(object):
     Create Python objects from IX-API responses.
 
     Nested dicts that represent other endpoints are also turned into
-    :py:class:`.Record` objects. All fields are then assigned to the object's
-    attributes. If a missing attribute is requested (e.g. requesting a field that's
-    only present on a full response on a :py:class:`.Record` made from a nested
-    response) then pyixapi will make a request for the full object and return the
-    requested value.
+    :py:class:`.Record` objects (when the corresponding model declares them as a
+    class attribute). All fields are then assigned to the object's attributes.
+
+    Only the fields present in the response are set as attributes; accessing a
+    field that was not returned raises :py:exc:`AttributeError`.
 
     :examples:
     Default representation of the object is usually its ID and/or name:
@@ -149,7 +149,6 @@ class Record(object):
     url: str | None = None
 
     def __init__(self, values: dict[str, Any], api: API, endpoint: Endpoint) -> None:
-        self._full_cache: list[Any] = []
         self._init_cache: list[tuple[str, Any]] = []
         self.api = api
         self.default_ret: type[Record] = Record
@@ -179,12 +178,6 @@ class Record(object):
     def __repr__(self) -> str:
         return str(dict(self))
 
-    def __getstate__(self) -> dict[str, Any]:
-        return self.__dict__
-
-    def __setstate__(self, d: dict[str, Any]) -> None:
-        self.__dict__.update(d)
-
     def __key__(self) -> tuple[str, ...] | tuple[str]:
         if hasattr(self, "id"):
             return (self.endpoint.name, self.id)
@@ -212,8 +205,7 @@ class Record(object):
             if isinstance(list_item, dict):
                 lookup = getattr(self.__class__, key_name, None)
                 if not isinstance(lookup, list):
-                    # This is *list_parser*, so if the custom model field is not
-                    # a list (or is not defined), just return the default model
+                    # Field not declared as a list model: use the default Record.
                     return self.default_ret(list_item, self.api, self.endpoint)
                 else:
                     model = lookup[0]
@@ -259,16 +251,18 @@ class Record(object):
         return r
 
     def _diff(self) -> set[str]:
-        def fmt_dict(k: str, v: Any) -> tuple[str, Any]:
+        def make_hashable(v: Any) -> Any:
+            # Hashable, structure-preserving form for set comparison. Lists become
+            # tuples, not a joined string (which would collide).
             if isinstance(v, dict):
-                return k, Hashabledict(v)
+                return Hashabledict({k: make_hashable(val) for k, val in v.items()})
             if isinstance(v, list):
-                return k, ",".join(map(str, v))
-            return k, v
+                return tuple(make_hashable(i) for i in v)
+            return v
 
-        current = Hashabledict({fmt_dict(k, v) for k, v in self.serialize().items()})
-        init = Hashabledict({fmt_dict(k, v) for k, v in self.serialize(init=True).items()})
-        return set([i[0] for i in set(current.items()) ^ set(init.items())])
+        current = {k: make_hashable(v) for k, v in self.serialize().items()}
+        init = {k: make_hashable(v) for k, v in self.serialize(init=True).items()}
+        return {key for key, _ in set(current.items()) ^ set(init.items())}
 
     def updates(self) -> dict[str, Any]:
         """
@@ -343,4 +337,4 @@ class Record(object):
             user_agent=self.api.user_agent,
             proxies=self.api.proxies,
         )
-        return True if r.delete() else False
+        return r.delete()

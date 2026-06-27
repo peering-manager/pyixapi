@@ -15,14 +15,14 @@ def cat(*args: Any, separator: str = "/", trailing: str = "") -> str:
 
     If an item cannot be parsed as a string, an AttributeError will be raised.
 
-    >>> concatenate("a", "b", "c")
-    'a/b/c/'
-    >>> concatenate("a", "b", "/c/", separator="")
+    >>> cat("a", "/b/", "c/")
     'a/b/c'
-    >>> concatenate("a", "/b/", 1)
-    'a/b/1/'
-    >>> concatenate("a", "b", "c", separator="_", trailing="_")
-    'a_b_c_'
+    >>> cat("a", 1, "b")
+    'a/1/b'
+    >>> cat("a", "b", "c", separator="_")
+    'a_b_c'
+    >>> cat("a", "b", "c", trailing="/")
+    'a/b/c/'
     """
     s = separator.join([str(i).strip(separator) for i in args if str(i)])
     if trailing:
