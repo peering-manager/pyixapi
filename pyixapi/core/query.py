@@ -59,10 +59,8 @@ class Request(object):
     Responsible for building the URL and making the HTTP(S) requests to the API.
 
     :param base: (str) Base URL passed in api() instantiation.
-    :param filters: (dict, optional) contains key/value pairs that correlate to the
-        filters a given endpoint accepts.
-        In (e.g. /api/v1/devices?name='test') 'name': 'test' would be in the filters
-        dict.
+    :param filters: (dict, optional) key/value pairs matching the filters an
+        endpoint accepts, e.g. {"name": "test"} for /devices?name=test.
     """
 
     def __init__(
@@ -83,17 +81,6 @@ class Request(object):
         self.url = self.base if not key else cat(self.base, key)
         self.user_agent = user_agent
         self.proxies = proxies
-
-    def get_openapi(self) -> dict[str, Any]:
-        """
-        Get the OpenAPI Spec.
-        """
-        headers = {"Content-Type": "application/json;"}
-        req = self.http_session.get(cat(self.base, "docs/?format=openapi"), headers=headers)
-        if req.ok:
-            return req.json()
-        else:
-            raise RequestError(req)
 
     def get_version(self) -> int:
         """
@@ -129,7 +116,7 @@ class Request(object):
         add_params: dict[str, Any] | None = None,
         data: dict[str, Any] | None = None,
     ) -> Any:
-        if verb in ("post", "put") or verb == "delete" and data:
+        if verb in ("post", "put") or (verb == "delete" and data):
             headers: dict[str, str] = {"Content-Type": "application/json;"}
         else:
             headers = {"accept": "application/json;"}
@@ -184,7 +171,7 @@ class Request(object):
             for i in req:
                 yield i
         else:
-            self.count = len(req)
+            self.count = 1
             yield req
 
     def put(self, data: dict[str, Any]) -> dict[str, Any]:

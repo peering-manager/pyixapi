@@ -29,9 +29,6 @@ class Token:
         self.encoded: str = token  # Cache signed token data
         self.expires_at: datetime = expires_at
 
-    def __str__(self) -> str:
-        return self.encoded
-
     def __repr__(self) -> str:
         return f"<Token ttl={self.ttl}s>"
 
