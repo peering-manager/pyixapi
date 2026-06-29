@@ -51,7 +51,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       if: matrix.python == '3.14'
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: peering-manager/pyixapi
