@@ -17,6 +17,7 @@ To begin, import pyixapi and instantiate the API.
 
 ```python
 import pyixapi
+
 ixapi = pyixapi.api(
     "https://api.de-cix.net/api/v2/",
     "3LH3G72VH7H1SGogEsFeQOPsGjOQotMUZQRt2pK7YbH",
