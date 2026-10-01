@@ -34,7 +34,7 @@ from pyixapi.models import (
     RoutingFunction,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 
 class API(object):
