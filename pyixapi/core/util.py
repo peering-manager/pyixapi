@@ -2,7 +2,7 @@ from typing import Any
 
 
 class Hashabledict(dict):  # type: ignore[type-arg]
-    def __hash__(self) -> int:  # ty: ignore[invalid-attribute-override]
+    def __hash__(self) -> int:
         return hash(frozenset(self))
 
 
