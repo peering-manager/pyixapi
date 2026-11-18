@@ -54,8 +54,9 @@ known-first-party = ["pyixapi"]
 max-complexity = 31
 
 [tool.ty.rules]
-unresolved-attribute = "ignore"
-invalid-return-type = "ignore"
+missing-attribute = "ignore"
+missing-union-attribute = "ignore"
+invalid-explicit-return = "ignore"
 import-not-found = "ignore"
 
 [tool.pytest.ini_options]
